@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Requests\StoreTenant;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
+
+Route::post('/create-site', function (StoreTenant $request) {
+    $data = $request->validated();
+    $tenant = Tenant::create($data);
+
+    return redirect()->route('tenant_app', ['tenant' => $tenant->subdomain]);
+})->name('create_site');

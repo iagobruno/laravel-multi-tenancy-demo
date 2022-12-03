@@ -26,12 +26,19 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        // See https://laravel.com/docs/9.x/routing#explicit-binding
+        Route::model('tenant', \App\Models\Tenant::class);
+
         $this->configureRateLimiting();
 
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->domain('{tenant}' . config('app.main_domain'))
+                ->group(base_path('routes/tenant.php'));
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
