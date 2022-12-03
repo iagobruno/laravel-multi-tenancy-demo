@@ -1,6 +1,6 @@
 # laravel-multi-tenancy-demo
 
-Allows the creation of multiple tenants each with its own subdomain, users and authentication session.
+Allows the creation of projects (tenants) each with its own subdomain, users and authentication session.
 
 # Getting started
 
