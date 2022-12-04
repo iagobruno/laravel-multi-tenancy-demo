@@ -18,15 +18,13 @@ Route::view('/', 'tenant')->name('tenant_app');
 
 Route::post('/force-login', function () {
     $userId = request()->input('user_id');
-    $user = User::withoutGlobalScope('tenant')->findOrFail($userId);
-    Auth::login($user);
+    // $user = User::withoutGlobalScope('tenant')->findOrFail($userId);
+    Auth::loginUsingId($userId);
     return redirect()->back();
 })->name('login');
 
 Route::post('/create-user', function () {
-    User::factory()->create([
-        'tenant_id' => tenant()->id
-    ]);
+    User::factory()->create();
     return redirect()->back();
 })->name('create_user');
 
