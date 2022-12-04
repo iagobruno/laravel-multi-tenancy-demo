@@ -19,7 +19,7 @@
                     <div class="text-xs text-gray-600">Logado como:</div>
                     <div class="text-sm font-semibold">{{ auth()->user()->name }}</div>
                 </div>
-                <form action="{{ route_tenant('logout') }}" method="post">
+                <form action="{{ tenant_route('logout') }}" method="post">
                     @csrf
                     <button class="rounded bg-gray-300 px-1 text-sm text-gray-900">Sair</button>
                 </form>
@@ -40,7 +40,7 @@
                         <span class="font-semibold">{{ $user->name }}</span>
 
                         @if (auth()->id() !== $user->id)
-                            <form action="{{ route_tenant('login') }}" method="POST"
+                            <form action="{{ tenant_route('login') }}" method="POST"
                                 class="m-0 ml-auto">
                                 @csrf
                                 <input type="hidden" name="user_id" value="{{ $user->id }}">
@@ -54,7 +54,7 @@
                 @endforeach
             </ol>
 
-            <form action="{{ route_tenant('create_user') }}" method="post">
+            <form action="{{ tenant_route('create_user') }}" method="post">
                 @csrf
                 <button type="submit" class="cursor-pointer rounded bg-blue-500 px-3 py-1 text-white">Criar novo
                     usuário</button>

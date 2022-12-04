@@ -15,11 +15,11 @@ if (!function_exists('tenant')) {
 }
 
 
-if (!function_exists('route_tenant')) {
+if (!function_exists('tenant_route')) {
     /**
      * Generate the URL to a named route binded to the current tenant.
      */
-    function route_tenant(string $name, $parameters = [], $absolute = true)
+    function tenant_route(string $name, $parameters = [], $absolute = true)
     {
         return route($name, [
             'tenant' => tenant()->subdomain,
