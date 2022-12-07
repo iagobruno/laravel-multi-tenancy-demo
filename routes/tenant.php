@@ -24,7 +24,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Route::get('/', function () {
-        echo  'This is your multi-tenant application. The id of the current tenant is ' . tenant('name');
+        echo 'This is your multi-tenant application. The id of the current tenant is ' . tenant('name');
         dump(\App\Models\User::all()->toArray());
     })->name('home');
 });

@@ -15,16 +15,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Store::create([
-            // 'id' => 'loja-de-test'
-        ])
-            ->domains()->create([
-                'domain' => 'test.localhost'
-            ]);
+        DB::statement('DROP DATABASE IF EXISTS "tenant-loja-de-test"');
 
-
-        \App\Models\Store::all()->runForEach(function () {
-            \App\Models\User::factory(3)->create();
-        });
+        $tenant = \App\Models\Store::create([
+            'id' => 'loja-de-test'
+        ]);
+        $tenant->domains()->create([
+            'domain' => 'test.localhost'
+        ]);
     }
 }
