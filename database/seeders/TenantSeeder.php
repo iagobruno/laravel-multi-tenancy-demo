@@ -23,11 +23,11 @@ class TenantSeeder extends Seeder
     {
         \App\Models\User::factory(3)->create();
 
-        $domain = tenant()->domains?->first()?->domain;
-        $admin = \App\Models\User::factory()->create([
+        $admin = \App\Models\User::factory()->admin()->create([
             'email' => 'admin@admin.com',
             'password' => $pass = '12345678'
         ]);
+        $domain = tenant()->domains?->first()?->domain;
 
         dump("Fake user to login on http://{$domain}. Email: \"{$admin->email}\", Password: \"{$pass}\"");
     }
