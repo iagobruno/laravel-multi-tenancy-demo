@@ -25,13 +25,14 @@ class UserResource extends Resource
     protected static ?string $slug = 'users';
     protected static ?string $modelLabel = 'Usuário';
     protected static ?string $pluralModelLabel = 'Usuários';
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 2;
+    protected static ?string $navigationGroup = 'Loja';
     protected static ?string $recordTitleAttribute = 'name';
 
     public static function getEloquentQuery(): QueryBuilder
     {
-        return static::getModel()::query();
+        return parent::getEloquentQuery();
     }
 
     public static function getNavigationBadge(): ?string
@@ -63,13 +64,13 @@ class UserResource extends Resource
                         ->email()
                         ->required()
                         ->helperText('Ao digitar você aceita receber emails de marketing')
-                        ->disabled(fn (Page $livewire) => ($livewire instanceof EditUser)),
+                        ->disabledOn('edit'),
                     FormComponents\TextInput::make('password')
                         ->label('Senha:')
                         ->password()
                         ->disableAutocomplete()
                         ->required()
-                        ->hidden(fn (Page $livewire) => !($livewire instanceof CreateUser)),
+                        ->hiddenOn('edit'),
                     FormComponents\Toggle::make('is_admin')
                         ->label('Administrador:')
                         ->default(false)
