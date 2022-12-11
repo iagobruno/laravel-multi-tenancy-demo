@@ -14,6 +14,11 @@ class CreateUser extends CreateRecord
     protected ?string $subheading = 'Preencha todos os campos do formulário';
     protected ?string $maxContentWidth = '4xl';
 
+    public function getCreatedNotificationTitle(): ?string
+    {
+        return 'Usuário criado com sucesso!';
+    }
+
     public function getRedirectUrl(): string
     {
         return $this->getResource()::getUrl('index');

@@ -8,7 +8,6 @@ use App\Filament\Resources\UserResource\Pages\EditUser;
 use Filament\Resources\Pages\Page;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
-use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Forms\Components as FormComponents;
 use Filament\Forms\Components\Card;
@@ -16,7 +15,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Filters\Filter;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class UserResource extends Resource
@@ -29,6 +28,11 @@ class UserResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort = 2;
     protected static ?string $recordTitleAttribute = 'name';
+
+    public static function getEloquentQuery(): QueryBuilder
+    {
+        return static::getModel()::query();
+    }
 
     public static function getNavigationBadge(): ?string
     {
@@ -59,13 +63,13 @@ class UserResource extends Resource
                         ->email()
                         ->required()
                         ->helperText('Ao digitar você aceita receber emails de marketing')
-                        ->disabled(fn (Page $livewire) => $livewire instanceof EditUser),
+                        ->disabled(fn (Page $livewire) => ($livewire instanceof EditUser)),
                     FormComponents\TextInput::make('password')
                         ->label('Senha:')
                         ->password()
                         ->disableAutocomplete()
                         ->required()
-                        ->hidden(fn (Page $livewire) => !$livewire instanceof CreateUser),
+                        ->hidden(fn (Page $livewire) => !($livewire instanceof CreateUser)),
                     FormComponents\Toggle::make('is_admin')
                         ->label('Administrador:')
                         ->default(false)
@@ -106,26 +110,24 @@ class UserResource extends Resource
                     ->label('Criado em')
                     ->dateTime() // Or ->since()
                     ->sortable()
-                    ->toggleable()
-                    ->tooltip(fn (User $record) => $record->created_at->format('d/m/Y H:m:s')),
+                    ->toggleable(),
             ])
             ->defaultSort('created_at', 'DESC')
             ->filters([
                 Filter::make('Apenas administradores')
-                    ->query(fn (Builder $query) => $query->where('email', 'LIKE', '%' . '@admin.com')),
+                    ->query(
+                        fn (QueryBuilder $query) => $query->where('email', 'LIKE', '%' . '@admin.com')
+                    ),
                 Filter::make('Criados hoje')
-                    ->query(fn (Builder $query) => $query->where('created_at', '>=', now()->subHours(24)))
+                    ->query(
+                        fn (QueryBuilder $query) => $query->where('created_at', '>=', now()->subHours(24))
+                    )
             ])
             ->actions([
                 Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make()
-                        ->label('Ver detalhes'),
-                    Tables\Actions\EditAction::make()
-                        ->label('Editar')
-                        ->visible(fn (User $record): bool => true /*auth()->user()->can('update', $record)*/),
-                    Tables\Actions\DeleteAction::make()
-                        ->label('Deletar')
-                        ->visible(fn (User $record): bool => true /*auth()->user()->can('update', $record)*/),
+                    Tables\Actions\ViewAction::make()->label('Ver detalhes'),
+                    Tables\Actions\EditAction::make()->label('Editar'),
+                    Tables\Actions\DeleteAction::make()->label('Deletar'),
                 ])
             ])
             ->bulkActions([

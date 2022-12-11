@@ -13,10 +13,20 @@ class EditUser extends EditRecord
     protected static ?string $title = 'Editar usuário';
     protected ?string $maxContentWidth = '4xl';
 
-    protected function getActions(): array
+    public function getTitle(): string
+    {
+        return "Editar usuário #" . $this->data['id'];
+    }
+
+    public function getActions(): array
     {
         return [
-            Actions\DeleteAction::make(),
+            Actions\DeleteAction::make()->label('Deletar usuário'),
         ];
+    }
+
+    public function getSavedNotificationTitle(): ?string
+    {
+        return 'Atualizado com sucesso!';
     }
 }
