@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Models\Settings;
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
@@ -27,10 +26,8 @@ Route::middleware([
     Route::get('/', function () {
         echo 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id') . '<br><br>';
 
-        // Settings::truncate();
-        // Settings::set('logo', 'photos.google.com');
         echo 'Configurações do site:';
-        dump(Settings::getAll());
+        dump(tenant()->settings);
 
         // dump(\App\Models\User::all()->toArray());
     })->name('home');

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('id')->primary();
             $table->string('name')->nullable();
             $table->json('data')->nullable();
+            $table->json('settings')->default("[]");
             $table->timestamps();
         });
     }
