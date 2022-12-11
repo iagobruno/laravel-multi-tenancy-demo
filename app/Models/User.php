@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use Filament\Models\Contracts\FilamentUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -55,6 +56,18 @@ class User extends Authenticatable implements FilamentUser
         return $this->is_admin ||
             (str_ends_with($this->email, '@admin.com') && $this->hasVerifiedEmail());
     }
+
+    public function scopeOnlyAdmins(Builder $query)
+    {
+        return $query
+            ->where('is_admin', true)
+            ->orWhere(
+                fn (Builder $query) => $query
+                    ->where('email', 'LIKE', '%' . '@admin.com')
+                    ->whereNotNull('email_verified_at')
+            );
+    }
+
 
     public function canAccessFilament(): bool
     {
