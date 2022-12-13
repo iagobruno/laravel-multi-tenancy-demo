@@ -4,7 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\{FilamentUser, HasAvatar};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements FilamentUser, HasAvatar
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -26,6 +26,7 @@ class User extends Authenticatable implements FilamentUser
         'password',
         'age',
         'is_admin',
+        'avatar_url'
     ];
 
     /**
@@ -72,5 +73,10 @@ class User extends Authenticatable implements FilamentUser
     public function canAccessFilament(): bool
     {
         return $this->isAdmin();
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
     }
 }

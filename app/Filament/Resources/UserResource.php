@@ -7,7 +7,7 @@ use Filament\Resources\Pages\Page;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Resources\Form;
-use Filament\Forms\Components\{Card, TextInput, Toggle};
+use Filament\Forms\Components\{Card, TextInput, Toggle, FileUpload};
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables\Columns\{TextColumn, IconColumn};
@@ -43,6 +43,11 @@ class UserResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
+                    FileUpload::make('avatar_url')
+                        ->image()
+                        ->avatar()
+                        ->maxSize(5120)
+                        ->directory('avatars'),
                     TextInput::make('name')
                         ->label('Nome:')
                         ->required()
