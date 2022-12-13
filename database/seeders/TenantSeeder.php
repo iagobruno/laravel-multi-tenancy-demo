@@ -3,7 +3,10 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
+use App\Models\{Post, User};
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -21,14 +24,16 @@ class TenantSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\User::factory(3)->create();
-
-        $admin = \App\Models\User::factory()->admin()->create([
+        $admin = User::factory()->admin()->create([
             'email' => 'admin@admin.com',
             'password' => $pass = '12345678'
         ]);
         $domain = tenant()->domains?->first()?->domain;
 
         dump("Fake user to login on http://{$domain}. Email: \"{$admin->email}\", Password: \"{$pass}\"");
+
+        Post::factory(6)
+            ->forAuthor()
+            ->create();
     }
 }
