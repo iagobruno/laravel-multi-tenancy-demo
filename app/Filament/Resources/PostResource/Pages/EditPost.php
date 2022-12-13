@@ -25,12 +25,12 @@ class EditPost extends EditRecord
             Action::make('save')
                 ->label('Salvar alterações')
                 // ->disabled(!$this->record->isDirty())
-                ->action('savePost')
+                ->action('save')
                 ->color('primary')
                 ->icon('heroicon-o-save')
                 ->hidden($this->record->trashed()),
             Action::make('publish')
-                ->label('Publicar')
+                ->label($this->record->isScheduled ? 'Publicar agora' : 'Publicar')
                 ->hidden($this->record->isPublished || $this->record->trashed())
                 ->action('publishPost')
                 ->color('success')
@@ -55,22 +55,16 @@ class EditPost extends EditRecord
         ];
     }
 
-    protected bool $isPublishAction = false;
+    protected $notificationMessage = 'Alterações salvas';
 
     protected function getSavedNotificationTitle(): string
     {
-        return $this->isPublishAction ? 'Postagem publicada com sucesso!' : 'Alterações salvas';
-    }
-
-    public function savePost()
-    {
-        $this->isPublishAction = false;
-        $this->save();
+        return $this->notificationMessage;
     }
 
     public function publishPost()
     {
-        $this->isPublishAction = true;
+        $this->notificationMessage = 'Postagem publicada com sucesso!';
         $this->record->published_at = now();
         $this->save();
     }

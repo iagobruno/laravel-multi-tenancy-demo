@@ -10,6 +10,8 @@ class ListCategories extends ListRecords
 {
     protected static string $resource = CategoryResource::class;
 
+    protected ?string $subheading = 'Crie, edite e gerencie categorias em seu site.';
+
     protected function getActions(): array
     {
         return [

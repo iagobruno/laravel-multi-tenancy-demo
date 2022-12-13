@@ -25,7 +25,7 @@ class CreatePost extends CreateRecord
         return [
             Action::make('save_draft')
                 ->label('Salvar rascunho')
-                ->action('savePost')
+                ->action('create')
                 ->color('primary')
                 ->icon('heroicon-o-save'),
             Action::make('publish')
@@ -38,22 +38,16 @@ class CreatePost extends CreateRecord
         ];
     }
 
-    protected bool $isPublishAction;
+    protected string $notificationMessage = 'Postagem salva como rascunho';
 
     protected function getCreatedNotificationTitle(): string
     {
-        return $this->isPublishAction ? 'Postagem publicada com sucesso!' : 'Postagem salva como rascunho';
-    }
-
-    public function savePost()
-    {
-        $this->isPublishAction = false;
-        $this->create();
+        return $this->notificationMessage;
     }
 
     public function publishPost()
     {
-        $this->isPublishAction = true;
+        $this->notificationMessage = 'Postagem publicada com sucesso!';
         $this->create();
         $this->record->touch('published_at');
     }

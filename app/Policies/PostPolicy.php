@@ -11,6 +11,18 @@ class PostPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdmin()) return true;
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -41,7 +53,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -53,7 +65,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -65,7 +77,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -77,7 +89,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -89,6 +101,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 }

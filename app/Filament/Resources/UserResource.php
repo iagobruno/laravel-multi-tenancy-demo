@@ -7,14 +7,15 @@ use Filament\Resources\Pages\Page;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Resources\Form;
-use Filament\Forms\Components\{Card, TextInput, Toggle, FileUpload};
+use Filament\Forms\Components\{Card, TextInput, Toggle, FileUpload, Radio};
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables\Columns\{TextColumn, IconColumn};
+use Filament\Tables\Columns\{BadgeColumn, TextColumn, IconColumn};
 use Filament\Tables\Actions\{Action, ActionGroup, ViewAction, EditAction, DeleteAction, DeleteBulkAction};
 use Filament\Tables\Filters\{Filter};
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Enums\UserRoles;
 
 class UserResource extends Resource
 {
@@ -74,10 +75,16 @@ class UserResource extends Resource
                         ->disableAutocomplete()
                         ->required()
                         ->hiddenOn('edit'),
-                    Toggle::make('is_admin')
-                        ->label('Administrador:')
-                        ->default(false)
-                        ->inline(false),
+                    Radio::make('role')
+                        ->label('Função:')
+                        ->options([
+                            UserRoles::ADMIN->value => 'Administrador',
+                            UserRoles::AUTHOR->value => 'Autor',
+                        ])
+                        ->descriptions([
+                            UserRoles::ADMIN->value => 'Poder total sobre o site: pode editar produtos, modificar as configurações, etc.',
+                            UserRoles::AUTHOR->value => 'Pode escrever e publicar seus próprios posts.',
+                        ]),
                 ])
             ]);
     }
@@ -104,11 +111,13 @@ class UserResource extends Resource
                     ->sortable()
                     ->default('---')
                     ->toggleable(isToggledHiddenByDefault: true),
-                IconColumn::make('is_admin')
-                    ->label('Administrador')
-                    ->boolean(fn (User $record) => $record->isAdmin())
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
+                BadgeColumn::make('role')
+                    ->label('Função')
+                    ->enum([
+                        UserRoles::ADMIN->value => 'Administrador',
+                        UserRoles::AUTHOR->value => 'Autor',
+                    ])
+                    ->icon('heroicon-o-identification')
                     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Criado em')

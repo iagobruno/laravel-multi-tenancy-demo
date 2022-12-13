@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\UserResource\Pages;
 
 use App\Filament\Resources\UserResource;
-use Filament\Pages\Actions;
+use Filament\Pages\Actions\{Action, DeleteAction};
 use Filament\Resources\Pages\EditRecord;
 
 class EditUser extends EditRecord
@@ -21,8 +21,21 @@ class EditUser extends EditRecord
     public function getActions(): array
     {
         return [
-            Actions\DeleteAction::make()->label('Deletar usuário'),
+            Action::make('revoke-access')
+                ->label('Revogar acesso')
+                ->hidden(is_null($this->record->role) || $this->record->is(auth()->user()))
+                ->action('revokeUserAccessToDashboard')
+                ->requiresConfirmation()
+                ->modalSubheading('Este usuário não terá mais acesso ao painel de controle.'),
+            DeleteAction::make()->label('Deletar usuário'),
         ];
+    }
+
+    public function revokeUserAccessToDashboard()
+    {
+        $this->record->role = null;
+        $this->record->save();
+        $this->notify('success', 'O usuário não tem mais acesso ao painel de controle.');
     }
 
     public function getSavedNotificationTitle(): ?string

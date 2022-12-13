@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
+use App\Enums\UserRoles;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
@@ -25,7 +26,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'email',
         'password',
         'age',
-        'is_admin',
+        'role',
         'avatar_url'
     ];
 
@@ -42,7 +43,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_admin' => 'boolean',
+        'role' => UserRoles::class,
     ];
 
     public function password(): Attribute
@@ -54,25 +55,23 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function isAdmin()
     {
-        return $this->is_admin ||
-            (str_ends_with($this->email, '@admin.com') && $this->hasVerifiedEmail());
+        return $this->role === UserRoles::ADMIN;
+    }
+
+    public function isAuthor()
+    {
+        return $this->role === UserRoles::AUTHOR;
     }
 
     public function scopeOnlyAdmins(Builder $query)
     {
-        return $query
-            ->where('is_admin', true)
-            ->orWhere(
-                fn (Builder $query) => $query
-                    ->where('email', 'LIKE', '%' . '@admin.com')
-                    ->whereNotNull('email_verified_at')
-            );
+        return $query->where('role', UserRoles::ADMIN->value);
     }
 
 
     public function canAccessFilament(): bool
     {
-        return $this->isAdmin();
+        return $this->isAdmin() || $this->isAuthor();
     }
 
     public function getFilamentAvatarUrl(): ?string

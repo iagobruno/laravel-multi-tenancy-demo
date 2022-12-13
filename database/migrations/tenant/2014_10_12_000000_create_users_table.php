@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->integer('age')->nullable();
-            $table->boolean('is_admin')->default(false);
+            $table->string('role')->nullable();
             $table->string('avatar_url')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

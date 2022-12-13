@@ -11,6 +11,18 @@ class CategoryPolicy
     use HandlesAuthorization;
 
     /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdmin()) return true;
+    }
+
+    /**
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
@@ -41,7 +53,7 @@ class CategoryPolicy
      */
     public function create(User $user)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -53,7 +65,7 @@ class CategoryPolicy
      */
     public function update(User $user, Category $category)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 
     /**
@@ -65,6 +77,6 @@ class CategoryPolicy
      */
     public function delete(User $user, Category $category)
     {
-        return $user->isAdmin();
+        return $user->isAuthor();
     }
 }
