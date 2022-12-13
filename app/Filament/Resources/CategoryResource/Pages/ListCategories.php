@@ -13,7 +13,13 @@ class ListCategories extends ListRecords
     protected function getActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            Actions\CreateAction::make()
+                ->label('Criar categoria')
+                ->mutateFormDataUsing(function (array $data): array {
+                    return array_merge($data, [
+                        'created_by' => auth()->id(),
+                    ]);
+                }),
         ];
     }
 }

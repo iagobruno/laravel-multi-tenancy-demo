@@ -56,6 +56,9 @@ class CategoryResource extends Resource
                     ->sortable()
                     ->searchable(),
                 TextColumn::make('slug'),
+                TextColumn::make('creator.name')
+                    ->label('Criado por')
+                    ->toggleable(isToggledHiddenByDefault: false),
                 TextColumn::make('created_at')
                     ->label('Criado em')
                     ->dateTime('d/m/Y à\s H:i')
