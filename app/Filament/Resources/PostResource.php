@@ -4,13 +4,13 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\{Post, User};
+use App\Models\{Category, Post, User};
 use Filament\Forms;
 use Filament\Forms\Components\{Card, DateTimePicker, Grid, Placeholder, RichEditor, Select, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
-use Filament\Tables\Columns\{BadgeColumn, TextColumn, IconColumn};
+use Filament\Tables\Columns\{BadgeColumn, TextColumn, IconColumn, TagsColumn};
 use Filament\Tables\Filters\{Filter, SelectFilter, TernaryFilter};
 use Filament\Tables\Actions\{Action, ActionGroup, EditAction, BulkAction, DeleteAction, DeleteBulkAction, ForceDeleteAction, RestoreAction, ViewAction};
 use Illuminate\Database\Eloquent\Builder;
@@ -50,6 +50,13 @@ class PostResource extends Resource
                 RichEditor::make('content')
                     ->label('')
                     ->required()
+                    ->columnSpanFull(),
+                Select::make('categories')
+                    ->label('Categorias:')
+                    ->multiple()
+                    ->relationship('categories', 'name')
+                    ->preload()
+                    ->searchable()
                     ->columnSpanFull(),
             ])
                 ->columns([
@@ -129,22 +136,25 @@ class PostResource extends Resource
                 ->label('Status')
                 ->getStateUsing(function (Post $record) {
                     if ($record->trashed()) return 'Na lixeira';
+                    if ($record->isScheduled) return 'Agendado';
                     if ($record->isPublished) return 'Público';
                     if (!$record->isPublished) return 'Rascunho';
-                    if ($record->isScheduled) return 'Agendado';
                 })
                 ->icon(function (Post $record) {
                     if ($record->trashed()) return 'heroicon-o-trash';
+                    if ($record->isScheduled) return 'heroicon-o-clock';
                     if ($record->isPublished) return 'heroicon-o-globe-alt';
                     if (!$record->isPublished) return 'heroicon-o-document-text';
-                    if ($record->isScheduled) return 'heroicon-o-clock';
                 })
                 ->color(function (Post $record) {
                     if ($record->trashed()) return 'danger';
+                    if ($record->isScheduled) return 'warning';
                     if ($record->isPublished) return 'success';
                     if (!$record->isPublished) return 'secondary';
-                    if ($record->isScheduled) return 'warning';
                 }),
+            TagsColumn::make('categories.name')
+                ->label('Categorias')
+                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('published_at')
                 ->label('Data de publicação')
                 ->dateTime('d/m/Y à\s H:i')
@@ -184,8 +194,12 @@ class PostResource extends Resource
                         };
                     }),
                 SelectFilter::make('author')
-                    ->label('Autor:')
+                    ->label('Do autor:')
                     ->relationship('author', 'name'),
+                SelectFilter::make('categories')
+                    ->label('Com a categoria:')
+                    ->relationship('categories', 'name')
+                    ->multiple(),
             ])
             ->actions([
                 EditAction::make()
