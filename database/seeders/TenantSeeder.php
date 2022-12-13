@@ -28,12 +28,19 @@ class TenantSeeder extends Seeder
             'email' => 'admin@admin.com',
             'password' => $pass = '12345678'
         ]);
-        $domain = tenant()->domains?->first()?->domain;
+        $domain = tenant()->domains()->first()?->domain;
 
         dump("Fake user to login on http://{$domain}. Email: \"{$admin->email}\", Password: \"{$pass}\"");
 
-        Post::factory(6)
-            ->forAuthor()
-            ->create();
+        foreach (range(0, 6) as $i) {
+            $possibleStatuses = ['draft', 'published', 'scheduled', 'trashed'];
+            $status = $possibleStatuses[$i % count($possibleStatuses)];
+
+            Post::factory()
+                ->setStatus($status)
+                ->forAuthor()
+                ->hasCategories(rand(0, 3))
+                ->create();
+        }
     }
 }

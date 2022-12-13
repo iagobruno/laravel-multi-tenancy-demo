@@ -23,10 +23,43 @@ class PostFactory extends Factory
         ];
     }
 
+    public function setStatusRandomly()
+    {
+        $possibleStatuses = ['draft', 'published', 'scheduled', 'trashed'];
+        $status = $possibleStatuses[array_rand($possibleStatuses)];
+        return $this->{$status}();
+    }
+
     public function published()
     {
         return $this->state(fn (array $attributes) => [
             'published_at' => now()
         ]);
+    }
+
+    public function draft()
+    {
+        return $this->state(fn (array $attributes) => [
+            'published_at' => null
+        ]);
+    }
+
+    public function scheduled()
+    {
+        return $this->state(fn (array $attributes) => [
+            'published_at' => now()->addDays(7),
+        ]);
+    }
+
+    public function trashed()
+    {
+        return $this->state(fn (array $attributes) => [
+            'deleted_at' => now(),
+        ]);
+    }
+
+    public function setStatus($state)
+    {
+        return $this->{$state}();
     }
 }
