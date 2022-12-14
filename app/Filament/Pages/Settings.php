@@ -6,6 +6,7 @@ use Filament\Pages\Page;
 use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Concerns\InteractsWithForms;
 use Filament\Forms\Components\{Section, TextInput, Select, Toggle, ColorPicker};
+use Illuminate\Support\Facades\Gate;
 
 class Settings extends Page implements HasForms
 {
@@ -97,14 +98,19 @@ class Settings extends Page implements HasForms
 
     public function mount(): void
     {
+        Gate::authorize('manage-settings');
+
+        // tenant()->settings = null;
+        // tenant()->save();
         // dd(tenant()->settings);
         $this->form->fill(
-            tenant()->settings
+            tenant()->settings ?? []
         );
     }
 
     public function submit(): void
     {
+        Gate::authorize('manage-settings');
         $this->validate();
 
         $updatedData = collect($this->form->getState())
@@ -115,5 +121,10 @@ class Settings extends Page implements HasForms
         tenant()->updateSettings($updatedData);
 
         $this->notify('success', 'Configurações atualizadas!');
+    }
+
+    protected static function shouldRegisterNavigation(): bool
+    {
+        return Gate::check('manage-settings');
     }
 }

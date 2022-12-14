@@ -22,6 +22,7 @@ class Store extends BaseTenant implements TenantWithDatabase
 
     protected $casts = [
         // 'settings' => AsArrayObject::class,
+        // 'settings' => 'array',
     ];
 
     public function updateSettings(array $newSettings)
