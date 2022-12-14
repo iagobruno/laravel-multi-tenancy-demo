@@ -71,9 +71,9 @@ class PostResource extends Resource
                     ->content(function (?Post $record) {
                         if (is_null($record)) return '-';
                         if ($record->trashed()) return 'Na lixeira';
-                        if ($record->isScheduled) return 'Agendado';
-                        if ($record->isPublished) return 'Público';
-                        if (!$record->isPublished) return 'Rascunho';
+                        if ($record->isScheduled()) return 'Agendado';
+                        if ($record->isPublished()) return 'Público';
+                        if (!$record->isPublished()) return 'Rascunho';
                     }),
                 Placeholder::make('author.name')
                     ->label('Autor:')
@@ -136,21 +136,21 @@ class PostResource extends Resource
                 ->label('Status')
                 ->getStateUsing(function (Post $record) {
                     if ($record->trashed()) return 'Na lixeira';
-                    if ($record->isScheduled) return 'Agendado';
-                    if ($record->isPublished) return 'Público';
-                    if (!$record->isPublished) return 'Rascunho';
+                    if ($record->isScheduled()) return 'Agendado';
+                    if ($record->isPublished()) return 'Público';
+                    if (!$record->isPublished()) return 'Rascunho';
                 })
                 ->icon(function (Post $record) {
                     if ($record->trashed()) return 'heroicon-o-trash';
-                    if ($record->isScheduled) return 'heroicon-o-clock';
-                    if ($record->isPublished) return 'heroicon-o-globe-alt';
-                    if (!$record->isPublished) return 'heroicon-o-document-text';
+                    if ($record->isScheduled()) return 'heroicon-o-clock';
+                    if ($record->isPublished()) return 'heroicon-o-globe-alt';
+                    if (!$record->isPublished()) return 'heroicon-o-document-text';
                 })
                 ->color(function (Post $record) {
                     if ($record->trashed()) return 'danger';
-                    if ($record->isScheduled) return 'warning';
-                    if ($record->isPublished) return 'success';
-                    if (!$record->isPublished) return 'secondary';
+                    if ($record->isScheduled()) return 'warning';
+                    if ($record->isPublished()) return 'success';
+                    if (!$record->isPublished()) return 'secondary';
                 }),
             TagsColumn::make('categories.name')
                 ->label('Categorias')

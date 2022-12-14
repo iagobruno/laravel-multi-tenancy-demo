@@ -35,23 +35,24 @@ class Post extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public function isDraft(): Attribute
+    public function isDraft()
     {
-        return Attribute::get(fn () => is_null($this->published_at));
+        return is_null($this->published_at);
     }
 
-    public function isPublished(): Attribute
+    public function isPublished()
     {
-        return Attribute::get(
-            fn () => !is_null($this->published_at) && $this->published_at->isPast()
-        );
+        return !is_null($this->published_at) && $this->published_at->isPast();
     }
 
-    public function isScheduled(): Attribute
+    public function isScheduled()
     {
-        return Attribute::get(
-            fn () => !is_null($this->published_at) && $this->published_at->isFuture()
-        );
+        return !is_null($this->published_at) && $this->published_at->isFuture();
+    }
+
+    public function scopeDraft(\Illuminate\Database\Eloquent\Builder $query)
+    {
+        return $query->whereNull('published_at');
     }
 
     public function scopePublished(\Illuminate\Database\Eloquent\Builder $query)
@@ -62,10 +63,5 @@ class Post extends Model
     public function scopeScheduled(\Illuminate\Database\Eloquent\Builder $query)
     {
         return $query->whereNotNull('published_at')->where('published_at', '>=', now());
-    }
-
-    public function scopeDraft(\Illuminate\Database\Eloquent\Builder $query)
-    {
-        return $query->whereNull('published_at');
     }
 }

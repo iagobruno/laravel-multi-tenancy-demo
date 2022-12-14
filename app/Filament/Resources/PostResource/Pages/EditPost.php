@@ -30,8 +30,8 @@ class EditPost extends EditRecord
                 ->icon('heroicon-o-save')
                 ->hidden($this->record->trashed()),
             Action::make('publish')
-                ->label($this->record->isScheduled ? 'Publicar agora' : 'Publicar')
-                ->hidden($this->record->isPublished || $this->record->trashed())
+                ->label($this->record->isScheduled() ? 'Publicar agora' : 'Publicar')
+                ->hidden($this->record->isPublished() || $this->record->trashed())
                 ->action('publishPost')
                 ->color('success')
                 ->icon('heroicon-o-globe-alt')
@@ -51,7 +51,7 @@ class EditPost extends EditRecord
                 ->modalSubheading('É possível desfazer essa ação posteriormente')
                 ->successRedirectUrl($this->getResource()::getUrl('index'))
                 ->successNotificationTitle('Postagem movida para a lixeira')
-                ->visible($this->record->isPublished && !$this->record->trashed()),
+                ->visible($this->record->isPublished() && !$this->record->trashed()),
         ];
     }
 
