@@ -15,13 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::statement('DROP DATABASE IF EXISTS "tenant-loja-de-test"');
+        $name = 'Loja de teste';
+        $slug = str($name)->slug();
+
+        DB::statement("DROP DATABASE IF EXISTS \"tenant-$slug\"");
 
         $tenant = \App\Models\Store::create([
-            'id' => 'loja-de-test'
+            'id' => $slug,
+            'settings' => [
+                'site_name' => $name,
+            ],
         ]);
         $tenant->domains()->create([
-            'domain' => 'test.localhost'
+            'domain' => "$slug.localhost"
         ]);
     }
 }
