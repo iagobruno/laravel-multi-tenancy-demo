@@ -84,7 +84,8 @@ class UserResource extends Resource
                         ->descriptions([
                             UserRoles::ADMIN->value => 'Poder total sobre o site: pode editar produtos, modificar as configurações, etc.',
                             UserRoles::AUTHOR->value => 'Pode escrever e publicar seus próprios posts.',
-                        ]),
+                        ])
+                        ->visible(auth()->user()->isAdmin()),
                 ])
             ]);
     }
