@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
-use App\Models\{Post, User};
+use App\Models\{Post, Product, User};
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -42,5 +42,7 @@ class TenantSeeder extends Seeder
                 ->hasCategories(rand(0, 3))
                 ->create();
         }
+
+        Product::factory(6)->create();
     }
 }
