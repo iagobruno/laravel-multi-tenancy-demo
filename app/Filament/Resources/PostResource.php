@@ -33,7 +33,7 @@ class PostResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Card::make()->schema([
+            Card::make([
                 TextInput::make('title')
                     ->label('Título:')
                     ->required()
@@ -63,7 +63,7 @@ class PostResource extends Resource
                 ->columnSpan(2),
 
             // Info card
-            Card::make()->schema([
+            Card::make([
                 Placeholder::make('status')
                     ->label('Status:')
                     ->content(function (?Post $record) {

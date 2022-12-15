@@ -20,9 +20,12 @@ class Product extends Model
         'price',
         'compare_at_price',
         'sku',
+        'metadata',
     ];
 
-    protected $casts = [];
+    protected $casts = [
+        'metadata' => 'array'
+    ];
 
     public function sluggable(): array
     {

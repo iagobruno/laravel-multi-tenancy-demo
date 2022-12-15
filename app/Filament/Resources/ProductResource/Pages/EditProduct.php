@@ -41,4 +41,15 @@ class EditProduct extends EditRecord
                 ->successRedirectUrl(null),
         ];
     }
+
+    protected function getSavedNotificationTitle(): string
+    {
+        return 'Alterações salvas';
+    }
+
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        // dd($data);
+        return $data;
+    }
 }

@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\{Card, Placeholder, Textarea, TextInput};
+use Filament\Forms\Components\{Card, KeyValue, Placeholder, Textarea, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -33,7 +33,7 @@ class ProductResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Card::make()->schema([
+            Card::make([
                 TextInput::make('title')
                     ->label('Título:')
                     ->required()
@@ -95,7 +95,7 @@ class ProductResource extends Resource
                 ->columnSpan(2),
 
             // Info card
-            Card::make()->schema([
+            Card::make([
                 Placeholder::make('status')
                     ->label('Status:')
                     ->content(function (?Product $record) {
@@ -110,7 +110,21 @@ class ProductResource extends Resource
                     ->label('Atualizado em:')
                     ->content(fn (?Product $record) => $record?->updated_at->format('d/m/Y à\s H:i') ?? '-'),
             ])
-                ->columnSpan(1)
+                ->columnSpan(1),
+
+            // Meta data
+            Card::make([
+                KeyValue::make('metadata')
+                    ->label('Meta dados:')
+                    // ->default([])
+                    ->keyLabel('Chave')
+                    ->keyPlaceholder('Nome da propriedade')
+                    ->valueLabel('Valor')
+                    ->valuePlaceholder('Valor da propriedade')
+                    ->addButtonLabel('Novo')
+                    ->reorderable(),
+            ])
+                ->columnSpan(2),
         ])
             ->columns(3);
     }
