@@ -30,6 +30,13 @@ class Store extends BaseTenant implements TenantWithDatabase
         return Attribute::get(fn () => $this->settings['site_name'] ?? null);
     }
 
+    public function subdomain(): Attribute
+    {
+        return Attribute::get(
+            fn () => $this->domains()->firstWhere('domain', 'LIKE', ('%' . env('MAIN_DOMAIN')))->domain
+        );
+    }
+
     public function updateSettings(array $newSettings)
     {
         $this->settings = array_merge(

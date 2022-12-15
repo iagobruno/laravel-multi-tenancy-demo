@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
     use HasFactory;
+    use Sluggable;
     use SoftDeletes;
 
     protected $fillable = [
@@ -63,5 +65,14 @@ class Post extends Model
     public function scopeScheduled(\Illuminate\Database\Eloquent\Builder $query)
     {
         return $query->whereNotNull('published_at')->where('published_at', '>=', now());
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 }

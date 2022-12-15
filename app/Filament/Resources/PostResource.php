@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\{Category, Post, User};
+use App\Models\{Category, Post, Product, User};
 use Filament\Forms;
 use Filament\Forms\Components\{Card, DateTimePicker, Grid, Placeholder, RichEditor, Select, TextInput};
 use Filament\Resources\Form;
@@ -16,6 +16,7 @@ use Filament\Tables\Actions\{Action, ActionGroup, EditAction, BulkAction, Delete
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Database\Eloquent\Collection;
+use \Cviebrock\EloquentSluggable\Services\SlugService;
 
 class PostResource extends Resource
 {
@@ -38,15 +39,12 @@ class PostResource extends Resource
                     ->required()
                     ->maxLength(255)
                     ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', str()->slug($state)))
-                    ->columnSpanFull(),
-                TextInput::make('slug')
-                    ->label('Slug:')
-                    ->disabled()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Post::class, 'slug', fn ($record) => $record)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->helperText(function ($state, $record) {
+                        if ($record?->slug) $slug = $record->slug;
+                        else $slug = $state ? SlugService::createSlug(Product::class, 'slug', $state) : '...';
+                        return tenant_route(tenant()->subdomain, 'post_page', ['post' => $slug]);
+                    }),
                 RichEditor::make('content')
                     ->label('')
                     ->required()
@@ -192,14 +190,17 @@ class PostResource extends Resource
                             'trashed' => $query->onlyTrashed(),
                             default => $query->withoutTrashed(),
                         };
-                    }),
+                    })
+                    ->placeholder('Todos'),
                 SelectFilter::make('author')
                     ->label('Do autor:')
-                    ->relationship('author', 'name'),
+                    ->relationship('author', 'name')
+                    ->placeholder('Todos'),
                 SelectFilter::make('categories')
                     ->label('Com a categoria:')
                     ->relationship('categories', 'name')
-                    ->multiple(),
+                    ->multiple()
+                    ->placeholder('Todas'),
             ])
             ->actions([
                 EditAction::make()
@@ -227,7 +228,8 @@ class PostResource extends Resource
                     Action::make('copy-link')
                         ->label('Copiar link')
                         ->icon('heroicon-o-link')
-                        ->url('#')
+                        ->url(fn (Post $record) => tenant_route(tenant()->subdomain, 'post_page', ['post' => $record->slug]))
+                        ->openUrlInNewTab()
                         ->hidden(fn (Post $record) => $record->trashed()),
                     DeleteAction::make()
                         ->label('Mover para a lixeira')

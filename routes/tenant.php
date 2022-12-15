@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use App\Models\{Post, Product};
 
 /*
 |--------------------------------------------------------------------------
@@ -31,4 +32,12 @@ Route::middleware([
 
         // dump(\App\Models\User::all()->toArray());
     })->name('home');
+
+    Route::get('/blog/{post:slug}', function (Post $post) {
+        return $post;
+    })->name('post_page');
+
+    Route::get('/produto/{product:slug}', function (Product $product) {
+        return $product;
+    })->name('product_page');
 });

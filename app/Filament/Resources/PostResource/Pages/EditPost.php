@@ -20,7 +20,10 @@ class EditPost extends EditRecord
                 ->label('Visualizar')
                 ->color('secondary')
                 ->icon('heroicon-o-eye')
-                ->url('#')
+                ->url(
+                    tenant_route(tenant()->subdomain, 'post_page', ['post' => $this->record->slug])
+                )
+                ->openUrlInNewTab()
                 ->hidden($this->record->trashed()),
             Action::make('save')
                 ->label('Salvar alterações')
