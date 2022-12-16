@@ -18,10 +18,14 @@ class Product extends Model
         'title',
         'slug',
         'description',
+        'image_url',
         'price',
         'compare_at_price',
-        'image_url',
+        'cost',
+        'shippable',
+        'returnable',
         'sku',
+        'barcode',
         'metadata',
     ];
 

@@ -22,7 +22,10 @@ class ProductFactory extends Factory
             'image_url' => 'https://demo.vercel.store/_next/image?url=https%3A%2F%2Fcdn.shopify.com%2Fs%2Ffiles%2F1%2F0434%2F0285%2F4564%2Fproducts%2FQZSide-Model.png%3Fv%3D1623256247&w=640&q=85',
             'description' => fake()->paragraphs(2, true),
             'price' => rand(20, 200) * 100,
-            'sku' => null,
+            'sku' => '12345678',
+            'barcode' => 'ABCDEFGH',
+            'shippable' => true,
+            'returnable' => false,
         ];
     }
 }

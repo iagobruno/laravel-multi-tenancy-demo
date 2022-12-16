@@ -10,7 +10,7 @@ class EditProduct extends EditRecord
 {
     protected static string $resource = ProductResource::class;
 
-    protected static ?string $title = 'Editar postagem';
+    protected static ?string $title = 'Editar produto';
 
     protected function getActions(): array
     {

@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\{Card, FileUpload, KeyValue, Placeholder, Textarea, TextInput};
+use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Section, Textarea, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -62,44 +62,17 @@ class ProductResource extends Resource
                     ->imagePreviewHeight('300')
                     ->directory('products-images')
                     ->columnSpanFull(),
-                // FIX: Aplicar uma máscara de formatação de dinheiro e salvar o valor como integer no banco de dados
-                TextInput::make('price')
-                    ->label('Preço:')
-                    ->required()
-                    ->numeric()
-                    ->step(1)
-                    // ->minValue(0)
-                    // ->mask(
-                    //     fn (TextInput\Mask $mask) => $mask
-                    //         ->numeric()
-                    //         ->decimalPlaces(2)
-                    //         ->decimalSeparator(',')
-                    //         ->thousandsSeparator('.')
-                    //         ->padFractionalZeros()
-                    //         ->normalizeZeros(false)
-                    //         ->signed()
-                    // )
-                    ->prefix('R$')
-                    ->maxWidth('sm')
-                    // ->formatStateUsing(fn ($state) => ($state) / 100)
-                    // ->dehydrateStateUsing(fn ($state) => dd($state))
-                    ->disableAutocomplete()
-                    ->columnSpan(1),
-                TextInput::make('compare_at_price')
-                    ->label('Comparação de preços:')
-                    ->numeric()
-                    ->step(1)
-                    ->prefix('R$')
-                    ->maxWidth('sm')
-                    ->helperText('Para mostrar um preço reduzido, mova o valor original do produto para Comparação de preços. Insira um valor menor em Preço.')
-                    ->disableAutocomplete()
-                    ->columnSpan(1),
-                TextInput::make('SKU')
+                TextInput::make('sku')
                     ->label('SKU (Unidade de manutenção de estoque):')
                     ->maxLength(50)
-                    ->maxWidth('sm')
                     ->helperText('Informação não exibida aos clientes')
-                    ->disableAutocomplete(),
+                    ->disableAutocomplete()
+                    ->columnSpan(1),
+                TextInput::make('barcode')
+                    ->label('Código de barras (ISBN, UPC, GTIN etc.):')
+                    ->maxLength(255)
+                    ->disableAutocomplete()
+                    ->columnSpan(1)
             ])
                 ->columns([
                     'sm' => 2,
@@ -124,10 +97,72 @@ class ProductResource extends Resource
             ])
                 ->columnSpan(1),
 
+            Section::make('Preço')->schema([
+                // FIX: Aplicar uma máscara de formatação de dinheiro e salvar o valor como integer no banco de dados
+                TextInput::make('price')
+                    ->label('Preço:')
+                    ->required()
+                    ->numeric()
+                    ->step(1)
+                    // ->minValue(0)
+                    // ->mask(
+                    //     fn (TextInput\Mask $mask) => $mask
+                    //         ->numeric()
+                    //         ->decimalPlaces(2)
+                    //         ->decimalSeparator(',')
+                    //         ->thousandsSeparator('.')
+                    //         ->padFractionalZeros()
+                    //         ->normalizeZeros(false)
+                    //         ->signed()
+                    // )
+                    ->prefix('R$')
+                    ->placeholder('0,00')
+                    ->maxWidth('sm')
+                    // ->formatStateUsing(fn ($state) => ($state) / 100)
+                    // ->dehydrateStateUsing(fn ($state) => dd($state))
+                    ->disableAutocomplete(),
+                TextInput::make('compare_at_price')
+                    ->label('Comparação de preços:')
+                    ->numeric()
+                    ->step(1)
+                    ->prefix('R$')
+                    ->placeholder('0,00')
+                    ->maxWidth('sm')
+                    ->helperText('Para mostrar um preço reduzido, mova o valor original do produto para Comparação de preços. Insira um valor menor em Preço.')
+                    ->disableAutocomplete(),
+                TextInput::make('cost')
+                    ->label('Custo por item:')
+                    ->numeric()
+                    ->step(1)
+                    ->prefix('R$')
+                    ->placeholder('0,00')
+                    ->maxWidth('sm')
+                    ->helperText('Informação não exibida aos clientes')
+                    ->disableAutocomplete(),
+            ])
+                ->columns(2)
+                ->columnSpan(2),
+
+            Section::make('Envio')->schema([
+                Checkbox::make('shippable')
+                    ->label('Este produto é físico')
+                    ->default(true)
+                    ->reactive(),
+                Checkbox::make('returnable')
+                    ->label('Este produto pode ser devolvido')
+                    ->default(false)
+                    ->visible(fn (callable $get) => $get('shippable') === true),
+                Placeholder::make('shipping_explanation')
+                    ->content('Os clientes não inserirão o endereço de entrega nem escolherão uma forma de frete ao comprar este produto.')
+                    ->label('')
+                    ->visible(fn (callable $get) => $get('shippable') === false)
+            ])
+                ->columnSpan(2),
+
             // Meta data
-            Card::make([
+            Section::make('Meta dados')->schema([
                 KeyValue::make('metadata')
-                    ->label('Meta dados:')
+                    ->label('')
                     // ->default([])
                     ->keyLabel('Chave')
                     ->keyPlaceholder('Nome da propriedade')
