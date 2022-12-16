@@ -16,7 +16,6 @@ class ListCategories extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-                ->label('Criar categoria')
                 ->mutateFormDataUsing(function (array $data): array {
                     return array_merge($data, [
                         'created_by' => auth()->id(),

@@ -22,8 +22,8 @@ class UserResource extends Resource
     protected static ?string $model = User::class;
 
     protected static ?string $slug = 'users';
-    protected static ?string $modelLabel = 'Usuário';
-    protected static ?string $pluralModelLabel = 'Usuários';
+    protected static ?string $modelLabel = 'usuário';
+    protected static ?string $pluralModelLabel = 'usuários';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'Loja';
@@ -139,9 +139,9 @@ class UserResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    ViewAction::make()->label('Ver detalhes'),
-                    EditAction::make()->label('Editar'),
-                    DeleteAction::make()->label('Deletar'),
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
                 ])
             ])
             ->bulkActions([

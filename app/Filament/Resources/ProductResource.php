@@ -23,9 +23,9 @@ class ProductResource extends Resource
     protected static ?string $model = Product::class;
 
     protected static ?string $slug = 'shop/products';
-    protected static ?string $modelLabel = 'Produto';
-    protected static ?string $pluralModelLabel = 'Produtos';
-    protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
+    protected static ?string $modelLabel = 'produto';
+    protected static ?string $pluralModelLabel = 'produtos';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Loja';
     protected static ?string $recordTitleAttribute = 'title';
@@ -196,7 +196,6 @@ class ProductResource extends Resource
             ])
             ->actions([
                 EditAction::make()
-                    ->label('Editar')
                     ->hidden(fn (Product $record) => $record->trashed()),
                 RestoreAction::make()
                     ->label('Desarquivar')

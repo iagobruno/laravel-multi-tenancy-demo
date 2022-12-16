@@ -13,6 +13,7 @@ class CreateUser extends CreateRecord
     protected static ?string $title = 'Criar novo usuário';
     protected ?string $subheading = 'Preencha todos os campos do formulário';
     protected ?string $maxContentWidth = '4xl';
+    protected static bool $canCreateAnother = false;
 
     public function getCreatedNotificationTitle(): ?string
     {

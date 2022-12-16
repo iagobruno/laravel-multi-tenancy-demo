@@ -42,14 +42,14 @@ class EditProduct extends EditRecord
         ];
     }
 
-    protected function getSavedNotificationTitle(): string
-    {
-        return 'Alterações salvas';
-    }
-
     protected function mutateFormDataBeforeSave(array $data): array
     {
         // dd($data);
         return $data;
+    }
+
+    protected function getSavedNotificationTitle(): string
+    {
+        return 'Alterações salvas';
     }
 }

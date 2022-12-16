@@ -12,6 +12,7 @@ class CreatePost extends CreateRecord
 
     protected static ?string $title = 'Criar nova postagem';
     protected ?string $maxContentWidth = '7xl';
+    protected static bool $canCreateAnother = false;
 
     protected function mutateFormDataBeforeCreate(array $data): array
     {

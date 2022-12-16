@@ -21,8 +21,8 @@ class CategoryResource extends Resource
     protected static ?string $model = Category::class;
 
     protected static ?string $slug = 'blog/categories';
-    protected static ?string $modelLabel = 'Categoria';
-    protected static ?string $pluralModelLabel = 'Categorias';
+    protected static ?string $modelLabel = 'categoria';
+    protected static ?string $pluralModelLabel = 'categorias';
     protected static ?string $navigationIcon = 'heroicon-o-collection';
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationGroup = 'Blog';
@@ -81,14 +81,11 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                EditAction::make()
-                    ->label('Editar'),
-                DeleteAction::make()
-                    ->label('Deletar'),
+                EditAction::make(),
+                DeleteAction::make(),
             ])
             ->bulkActions([
-                DeleteBulkAction::make()
-                    ->label('Deletar selecionados'),
+                DeleteBulkAction::make(),
             ]);
     }
 

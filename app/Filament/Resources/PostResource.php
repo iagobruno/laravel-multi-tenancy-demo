@@ -23,8 +23,8 @@ class PostResource extends Resource
     protected static ?string $model = Post::class;
 
     protected static ?string $slug = 'blog/posts';
-    protected static ?string $modelLabel = 'Postagem';
-    protected static ?string $pluralModelLabel = 'Postagens';
+    protected static ?string $modelLabel = 'postagem';
+    protected static ?string $pluralModelLabel = 'postagens';
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
     protected static ?int $navigationSort = 0;
     protected static ?string $navigationGroup = 'Blog';
@@ -205,22 +205,17 @@ class PostResource extends Resource
             ])
             ->actions([
                 EditAction::make()
-                    ->label('Editar')
                     ->hidden(fn (Post $record) => $record->trashed()),
                 RestoreAction::make()
-                    ->label('Restaurar')
                     ->visible(fn (Post $record) => $record->trashed())
                     ->requiresConfirmation(false),
                 ForceDeleteAction::make()
-                    ->label('Deletar permanentemente')
                     ->visible(fn (Post $record) => $record->trashed())
                     ->requiresConfirmation()
-                    ->modalHeading('Deletar permanentemente?')
                     ->modalSubheading('Essa ação é irreversível'),
 
                 ActionGroup::make([
                     EditAction::make()
-                        ->label('Editar')
                         ->hidden(fn (Post $record) => $record->trashed()),
                     ViewAction::make()
                         ->label('Visualizar')
