@@ -20,6 +20,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->integer('price');
             $table->integer('compare_at_price')->nullable();
+            $table->string('image_url')->nullable();
             $table->string('sku')->nullable();
             $table->json('metadata')->default('{}');
             $table->softDeletes();

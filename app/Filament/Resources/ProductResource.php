@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\{Card, KeyValue, Placeholder, Textarea, TextInput};
+use Filament\Forms\Components\{Card, FileUpload, KeyValue, Placeholder, Textarea, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -42,6 +42,7 @@ class ProductResource extends Resource
                     ->placeholder('Camiseta manga curta')
                     ->lazy()
                     ->helperText(function ($state, $record) {
+                        // dd($record->toArray());
                         if ($record?->slug) $slug = $record->slug;
                         else $slug = $state ? SlugService::createSlug(Product::class, 'slug', $state) : '...';
                         return tenant_route(tenant()->subdomain, 'product_page', ['product' => $slug]);
@@ -49,6 +50,17 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Descrição:')
+                    ->columnSpanFull(),
+                // FIX: Mostrar corretamente a imagem de produtos que já tenham imagem
+                FileUpload::make('image_url')
+                    ->label('Imagem do produto:')
+                    ->image()
+                    ->maxSize(1024)
+                    ->imageCropAspectRatio('1:1')
+                    ->imageResizeTargetHeight('1024')
+                    ->imageResizeTargetWidth('1024')
+                    ->imagePreviewHeight('300')
+                    ->directory('products-images')
                     ->columnSpanFull(),
                 // FIX: Aplicar uma máscara de formatação de dinheiro e salvar o valor como integer no banco de dados
                 TextInput::make('price')
@@ -137,9 +149,9 @@ class ProductResource extends Resource
     public static function table(Table $table): Table
     {
         return $table->columns([
-            ImageColumn::make('image')
+            ImageColumn::make('image_url')
                 ->label('')
-                ->getStateUsing(fn () => ''),
+                ->size(50),
             TextColumn::make('title')
                 ->label('Título')
                 ->limit(50)
@@ -167,19 +179,20 @@ class ProductResource extends Resource
                     if ($record->trashed()) return 'danger';
                     return 'success';
                 }),
-            TextColumn::make('created_at')
-                ->label('Criado em')
-                ->dateTime('d/m/Y à\s H:i')
-                ->size('sm')
-                ->sortable()
-                ->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('updated_at')
                 ->label('Modificado')
                 ->since()
                 ->size('sm')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: false),
+            TextColumn::make('created_at')
+                ->label('Criado em')
+                ->dateTime('d/m/Y à\s H:i')
+                ->size('sm')
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
         ])
+            ->defaultSort('created_at', 'DESC')
             ->filters([
                 SelectFilter::make('status')
                     ->label('Status:')
