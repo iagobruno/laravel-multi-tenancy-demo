@@ -30,21 +30,25 @@ class CategoryResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->label('Nome da categoria:')
-                    ->required()
-                    ->maxLength(255)
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', str()->slug($state))),
-                TextInput::make('slug')
-                    ->label('Slug:')
-                    ->disabled()
-                    ->required()
-                    ->maxLength(255)
-                    ->unique(Category::class, 'slug', fn ($record) => $record),
-            ]);
+        return $form->schema(self::getFormSchema());
+    }
+
+    public static function getFormSchema()
+    {
+        return [
+            TextInput::make('name')
+                ->label('Nome da categoria:')
+                ->required()
+                ->maxLength(255)
+                ->reactive()
+                ->afterStateUpdated(fn ($state, callable $set) => $set('slug', str()->slug($state))),
+            TextInput::make('slug')
+                ->label('Slug:')
+                ->disabled()
+                ->required()
+                ->maxLength(255)
+                ->unique(Category::class, 'slug', fn ($record) => $record),
+        ];
     }
 
     public static function table(Table $table): Table

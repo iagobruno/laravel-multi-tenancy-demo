@@ -38,15 +38,15 @@ class ProductResource extends Resource
                     ->label('Título:')
                     ->required()
                     ->maxLength(255)
-                    ->reactive()
                     ->disableAutocomplete()
                     ->placeholder('Camiseta manga curta')
-                    ->columnSpanFull()
+                    ->lazy()
                     ->helperText(function ($state, $record) {
                         if ($record?->slug) $slug = $record->slug;
                         else $slug = $state ? SlugService::createSlug(Product::class, 'slug', $state) : '...';
                         return tenant_route(tenant()->subdomain, 'product_page', ['product' => $slug]);
-                    }),
+                    })
+                    ->columnSpanFull(),
                 Textarea::make('description')
                     ->label('Descrição:')
                     ->columnSpanFull(),

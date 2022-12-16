@@ -38,7 +38,7 @@ class PostResource extends Resource
                     ->label('Título:')
                     ->required()
                     ->maxLength(255)
-                    ->reactive()
+                    ->lazy()
                     ->columnSpanFull()
                     ->helperText(function ($state, $record) {
                         if ($record?->slug) $slug = $record->slug;
@@ -55,6 +55,7 @@ class PostResource extends Resource
                     ->relationship('categories', 'name')
                     ->preload()
                     ->searchable()
+                    ->createOptionForm(CategoryResource::getFormSchema())
                     ->columnSpanFull(),
             ])
                 ->columns([
