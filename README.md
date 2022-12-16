@@ -4,7 +4,15 @@ Allows the creation of e-commerce sites (tenants) each with its own subdomain, u
 
 > See the [`without-packages`](https://github.com/iagobruno/laravel-multi-tenancy-demo/tree/without-packages) branch for a manual implementation with a single database.
 
-# Getting started
+## Technologies and tools
+
+- Laravel
+- [stancl/tenancy](https://tenancyforlaravel.com/)
+- [Filament](https://filamentphp.com/)
+- PostgreSQL
+- Docker
+
+## Getting started
 
 Clone this repo and run commands in the order below:
 
@@ -24,7 +32,9 @@ sail up -d
 Run the migrations
 
 ```
-sail artisan migrate --seed
+sail artisan migrate:fresh --seed
+sail artisan tenants:migrate-fresh
+sail artisan tenants:seed
 ```
 
 ### Front-end assets
