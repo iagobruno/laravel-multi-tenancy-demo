@@ -28,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Carbon::setLocale(config('app.locale'));
 
+        Filament::registerViteTheme('resources/css/filament.css');
+
         Filament::registerNavigationGroups([
             NavigationGroup::make('Loja'),
             NavigationGroup::make('Blog'),
