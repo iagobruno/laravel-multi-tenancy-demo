@@ -43,6 +43,8 @@ class TenantSeeder extends Seeder
                 ->create();
         }
 
-        Product::factory(6)->create();
+        Product::factory(6)
+            ->withVariants(3)
+            ->create();
     }
 }

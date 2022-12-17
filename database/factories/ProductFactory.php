@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\ProductVariant;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -27,5 +28,14 @@ class ProductFactory extends Factory
             'shippable' => true,
             'returnable' => false,
         ];
+    }
+
+    public function withVariants(int $count)
+    {
+        return $this
+            ->has(ProductVariant::factory($count), 'variants')
+            ->state(fn (array $attributes) => [
+                'has_variants' => true,
+            ]);
     }
 }

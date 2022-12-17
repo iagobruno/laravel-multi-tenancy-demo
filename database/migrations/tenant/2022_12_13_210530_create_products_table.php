@@ -24,8 +24,9 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();
-            $table->boolean('shippable')->nullable();
-            $table->boolean('returnable')->nullable();
+            $table->boolean('has_variants')->default(false);
+            $table->boolean('shippable')->default(true);
+            $table->boolean('returnable')->default(false);
             $table->json('metadata')->default('{}');
             $table->softDeletes();
             $table->timestamps();

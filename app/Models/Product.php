@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
 
 class Product extends Model
 {
@@ -22,6 +23,7 @@ class Product extends Model
         'price',
         'compare_at_price',
         'cost',
+        'has_variants',
         'shippable',
         'returnable',
         'sku',
@@ -30,8 +32,20 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'metadata' => 'array'
+        'metadata' => 'array',
     ];
+
+    /**
+     * The relationships that should always be loaded.
+     */
+    protected $with = [
+        'variants',
+    ];
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class);
+    }
 
     public function imageUrl(): Attribute
     {

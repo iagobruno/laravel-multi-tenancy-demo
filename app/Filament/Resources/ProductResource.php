@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Section, Textarea, TextInput};
+use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Repeater, Section, Textarea, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -141,6 +141,41 @@ class ProductResource extends Resource
                     ->disableAutocomplete(),
             ])
                 ->columns(2)
+                ->columnSpan(2),
+
+            Section::make('Variantes')->schema([
+                Checkbox::make('has_variants')
+                    ->label('Este produto tem opções, como tamanho ou cor')
+                    ->default(false)
+                    ->reactive(),
+
+                Repeater::make('variants')
+                    ->relationship('variants')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Variante')
+                            ->required()
+                            ->maxLength(255)
+                            ->placeholder('Tamanho, Cor, Material, Estilo ...'),
+                        TextInput::make('price')
+                            ->label('Preço')
+                            ->numeric()
+                            ->minValue(0)
+                            ->placeholder('0,00'),
+                        TextInput::make('stock')
+                            ->label('Quantidade')
+                            ->required()
+                            ->numeric()
+                            ->default(0)
+                            ->minValue(0),
+                    ])
+                    ->label('')
+                    // ->itemLabel('ITEEEM')
+                    ->createItemButtonLabel('Criar variante')
+                    ->orderable()
+                    ->columns(3)
+                    ->visible(fn (callable $get) => $get('has_variants') === true),
+            ])
                 ->columnSpan(2),
 
             Section::make('Envio')->schema([
