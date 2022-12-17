@@ -19,7 +19,7 @@ class PostPolicy
      */
     public function before(User $user, $ability)
     {
-        if ($user->isAdmin()) return true;
+        if ($user->ownsCurrentTenant()) return true;
     }
 
     /**
@@ -53,7 +53,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return $user->isAuthor();
+        return $user->ownsCurrentTenant();
     }
 
     /**
@@ -65,7 +65,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->isAuthor();
+        return $user->ownsCurrentTenant();
     }
 
     /**
@@ -77,7 +77,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return $user->isAuthor();
+        return $user->ownsCurrentTenant();
     }
 
     /**
@@ -89,7 +89,7 @@ class PostPolicy
      */
     public function restore(User $user, Post $post)
     {
-        return $user->isAuthor();
+        return $user->ownsCurrentTenant();
     }
 
     /**
@@ -101,6 +101,6 @@ class PostPolicy
      */
     public function forceDelete(User $user, Post $post)
     {
-        return $user->isAuthor();
+        return $user->ownsCurrentTenant();
     }
 }

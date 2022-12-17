@@ -19,7 +19,7 @@ class ProductPolicy
      */
     public function before(User $user, $ability)
     {
-        return $user->isAdmin();
+        return $user->ownsCurrentTenant();
     }
 
     /**

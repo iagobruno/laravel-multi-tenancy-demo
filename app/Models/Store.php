@@ -4,26 +4,39 @@ namespace App\Models;
 
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
-use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo};
+use Stancl\Tenancy\Database\Concerns\{HasDatabase, CentralConnection, HasDomains};
 
 class Store extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use CentralConnection;
+    use HasDatabase;
+    use HasDomains;
 
     protected $table = 'stores';
 
-    protected $fillable = [
-        'data',
-        'settings',
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at'
     ];
+
+    public static function getCustomColumns(): array
+    {
+        return ['id', 'owner_id'];
+    }
 
     protected $casts = [
         // 'settings' => AsArrayObject::class,
         // 'settings' => 'array',
     ];
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function name(): Attribute
     {
@@ -44,5 +57,10 @@ class Store extends BaseTenant implements TenantWithDatabase
             $newSettings
         );
         return $this->save();
+    }
+
+    public function checkBelongsTo(User $model): bool
+    {
+        return $this->owner_id === $model->id && $model instanceof User;
     }
 }

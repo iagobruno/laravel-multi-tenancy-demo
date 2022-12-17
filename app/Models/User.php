@@ -2,21 +2,22 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
-use Filament\Models\Contracts\{FilamentUser, HasAvatar};
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Models\Contracts\{FilamentUser, HasAvatar, HasName};
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\{HasMany};
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
-use App\Enums\UserRoles;
+use Stancl\Tenancy\Database\Concerns\CentralConnection;
 
-class User extends Authenticatable implements FilamentUser, HasAvatar
+class User extends Authenticatable implements FilamentUser, HasAvatar, HasName
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use CentralConnection;
+    use HasFactory;
+    use HasApiTokens;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -25,8 +26,6 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'name',
         'email',
         'password',
-        'age',
-        'role',
         'avatar_url'
     ];
 
@@ -43,8 +42,12 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'role' => UserRoles::class,
     ];
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class);
+    }
 
     public function password(): Attribute
     {
@@ -53,25 +56,23 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         );
     }
 
-    public function isAdmin()
+    public function ownsCurrentTenant(): bool
     {
-        return $this->role === UserRoles::ADMIN;
-    }
-
-    public function isAuthor()
-    {
-        return $this->role === UserRoles::AUTHOR;
-    }
-
-    public function scopeOnlyAdmins(Builder $query)
-    {
-        return $query->where('role', UserRoles::ADMIN->value);
+        return tenant()->checkBelongsTo($this);
     }
 
 
+    /**
+     * Filament methods
+     */
     public function canAccessFilament(): bool
     {
-        return $this->isAdmin() || $this->isAuthor();
+        return $this->ownsCurrentTenant();
+    }
+
+    public function getFilamentName(): string
+    {
+        return $this->email;
     }
 
     public function getFilamentAvatarUrl(): ?string

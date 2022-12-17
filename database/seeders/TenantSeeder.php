@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
-use App\Models\{Post, Product, User};
+use App\Models\{Customer, Post, Product, User};
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -24,13 +24,9 @@ class TenantSeeder extends Seeder
      */
     public function run()
     {
-        $admin = User::factory()->admin()->create([
-            'email' => 'admin@admin.com',
-            'password' => $pass = '12345678'
-        ]);
-        $domain = tenant()->domains()->first()?->domain;
+        $users = User::all();
 
-        dump("Fake user to login on http://{$domain}. Email: \"{$admin->email}\", Password: \"{$pass}\"");
+        Customer::factory(20)->create();
 
         foreach (range(0, 6) as $i) {
             $possibleStatuses = ['draft', 'published', 'scheduled', 'trashed'];
@@ -38,7 +34,7 @@ class TenantSeeder extends Seeder
 
             Post::factory()
                 ->setStatus($status)
-                ->forAuthor()
+                ->for($users->random(), 'author')
                 ->hasCategories(rand(0, 3))
                 ->create();
         }
