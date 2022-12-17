@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
 use App\Filament\Resources\PostResource\RelationManagers;
-use App\Models\{Category, Post, Product, User};
+use App\Models\{Category, Post, Product, Customer};
 use Filament\Forms;
 use Filament\Forms\Components\{Card, DateTimePicker, Grid, Placeholder, RichEditor, Select, TextInput};
 use Filament\Resources\Form;

@@ -2,10 +2,10 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
+use App\Filament\Resources\CustomerResource\Pages;
 use Filament\Resources\Pages\Page;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
+use App\Filament\Resources\CustomerResource\RelationManagers;
+use App\Models\Customer;
 use Filament\Resources\Form;
 use Filament\Forms\Components\{Card, TextInput, Toggle, FileUpload, Radio};
 use Filament\Resources\Resource;
@@ -17,13 +17,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Enums\UserRoles;
 
-class UserResource extends Resource
+class CustomerResource extends Resource
 {
-    protected static ?string $model = User::class;
+    protected static ?string $model = Customer::class;
 
-    protected static ?string $slug = 'users';
-    protected static ?string $modelLabel = 'usuário';
-    protected static ?string $pluralModelLabel = 'usuários';
+    protected static ?string $slug = 'customers';
+    protected static ?string $modelLabel = 'cliente';
+    protected static ?string $pluralModelLabel = 'clientes';
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?int $navigationSort = 2;
     protected static ?string $navigationGroup = 'Loja';
@@ -75,17 +75,17 @@ class UserResource extends Resource
                         ->disableAutocomplete()
                         ->required()
                         ->hiddenOn('edit'),
-                    Radio::make('role')
-                        ->label('Função:')
-                        ->options([
-                            UserRoles::ADMIN->value => 'Administrador',
-                            UserRoles::AUTHOR->value => 'Autor',
-                        ])
-                        ->descriptions([
-                            UserRoles::ADMIN->value => 'Poder total sobre o site: pode editar produtos, modificar as configurações, etc.',
-                            UserRoles::AUTHOR->value => 'Pode escrever e publicar seus próprios posts.',
-                        ])
-                        ->visible(auth()->user()->isAdmin()),
+                    // Radio::make('role')
+                    //     ->label('Função:')
+                    //     ->options([
+                    //         UserRoles::ADMIN->value => 'Administrador',
+                    //         UserRoles::AUTHOR->value => 'Autor',
+                    //     ])
+                    //     ->descriptions([
+                    //         UserRoles::ADMIN->value => 'Poder total sobre o site: pode editar produtos, modificar as configurações, etc.',
+                    //         UserRoles::AUTHOR->value => 'Pode escrever e publicar seus próprios posts.',
+                    //     ])
+                    //     ->visible(auth()->user()->isAdmin()),
                 ])
             ]);
     }
@@ -105,21 +105,21 @@ class UserResource extends Resource
                     ->icon('heroicon-s-mail')
                     ->copyable()
                     ->tooltip('Clique para copiar')
-                    ->description(fn (User $record) => $record->hasVerifiedEmail() ? 'Email verificado' : 'Email não verificado')
+                    // ->description(fn (Customer $record) => $record->hasVerifiedEmail() ? 'Email verificado' : 'Email não verificado')
                     ->searchable(),
                 TextColumn::make('age')
                     ->label('Idade')
                     ->sortable()
                     ->default('---')
                     ->toggleable(isToggledHiddenByDefault: true),
-                BadgeColumn::make('role')
-                    ->label('Função')
-                    ->enum([
-                        UserRoles::ADMIN->value => 'Administrador',
-                        UserRoles::AUTHOR->value => 'Autor',
-                    ])
-                    ->icon('heroicon-o-identification')
-                    ->toggleable(),
+                // BadgeColumn::make('role')
+                //     ->label('Função')
+                //     ->enum([
+                //         UserRoles::ADMIN->value => 'Administrador',
+                //         UserRoles::AUTHOR->value => 'Autor',
+                //     ])
+                //     ->icon('heroicon-o-identification')
+                //     ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('Criado em')
                     ->dateTime() // Or ->since()
@@ -159,9 +159,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListCustomers::route('/'),
+            'create' => Pages\CreateCustomer::route('/create'),
+            'edit' => Pages\EditCustomer::route('/{record}/edit'),
         ];
     }
 }

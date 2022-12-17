@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\UserResource\Pages;
+namespace App\Filament\Resources\CustomerResource\Pages;
 
-use App\Filament\Resources\UserResource;
+use App\Filament\Resources\CustomerResource;
 use Filament\Pages\Actions\{Action, DeleteAction};
 use Filament\Resources\Pages\EditRecord;
 
-class EditUser extends EditRecord
+class EditCustomer extends EditRecord
 {
-    protected static string $resource = UserResource::class;
+    protected static string $resource = CustomerResource::class;
 
     protected static ?string $title = 'Editar usuário';
     protected ?string $maxContentWidth = '4xl';
@@ -21,12 +21,12 @@ class EditUser extends EditRecord
     public function getActions(): array
     {
         return [
-            Action::make('revoke-access')
-                ->label('Revogar acesso')
-                ->hidden(is_null($this->record->role) || $this->record->is(auth()->user()))
-                ->action('revokeUserAccessToDashboard')
-                ->requiresConfirmation()
-                ->modalSubheading('Este usuário não terá mais acesso ao painel de controle.'),
+            // Action::make('revoke-access')
+            //     ->label('Revogar acesso')
+            //     ->hidden(is_null($this->record->role) || $this->record->is(auth()->user()))
+            //     ->action('revokeUserAccessToDashboard')
+            //     ->requiresConfirmation()
+            //     ->modalSubheading('Este usuário não terá mais acesso ao painel de controle.'),
             DeleteAction::make()->label('Deletar usuário'),
         ];
     }
