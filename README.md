@@ -11,6 +11,7 @@ Allows the creation of multiple e-commerce sites, each with its own database, su
 - [Filament](https://filamentphp.com/)
 - PostgreSQL
 - Docker
+- [Tailwind](https://tailwindcss.com)
 
 ## Getting started
 
