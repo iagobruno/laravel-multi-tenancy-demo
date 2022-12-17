@@ -1,6 +1,6 @@
 # laravel-multi-tenancy-demo
 
-Allows the creation of e-commerce sites (tenants) each with its own subdomain, users and authentication session.
+Allows the creation of multiple e-commerce sites, each with its own database, subdomain and authentication session.
 
 > See the [`without-packages`](https://github.com/iagobruno/laravel-multi-tenancy-demo/tree/without-packages) branch for a manual implementation with a single database.
 
