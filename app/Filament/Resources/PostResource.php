@@ -51,8 +51,8 @@ class PostResource extends Resource
                     ->columnSpanFull(),
                 Select::make('categories')
                     ->label('Categorias:')
-                    ->multiple()
                     ->relationship('categories', 'name')
+                    ->multiple()
                     ->preload()
                     ->searchable()
                     ->createOptionForm(CategoryResource::getFormSchema())

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use App\Models\{Post, Product};
+use App\Models\{Collection, Post, Product};
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +40,8 @@ Route::middleware([
     Route::get('/produto/{product:slug}', function (Product $product) {
         return $product;
     })->name('product_page');
+
+    Route::get('/colecao/{collection:slug}', function (Collection $collection) {
+        return $collection;
+    })->name('collection_page');
 });

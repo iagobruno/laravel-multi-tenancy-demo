@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany};
 class Collection extends Model
 {
     use HasFactory;
+    use Sluggable;
 
     protected $guarded = [
         'id',
@@ -24,5 +26,14 @@ class Collection extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function sluggable(): array
+    {
+        return [
+            'slug' => [
+                'source' => 'title'
+            ]
+        ];
     }
 }

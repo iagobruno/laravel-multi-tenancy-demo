@@ -6,7 +6,7 @@ use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
-use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Repeater, Section, Textarea, TextInput};
+use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Repeater, Section, Select, Textarea, TextInput};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -72,7 +72,14 @@ class ProductResource extends Resource
                     ->label('Código de barras (ISBN, UPC, GTIN etc.):')
                     ->maxLength(255)
                     ->disableAutocomplete()
-                    ->columnSpan(1)
+                    ->columnSpan(1),
+                Select::make('collections')
+                    ->label('Coleção:')
+                    ->relationship('collections', 'title')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->columnSpanFull(),
             ])
                 ->columns([
                     'sm' => 2,
@@ -216,9 +223,9 @@ class ProductResource extends Resource
         return parent::getEloquentQuery()->withoutGlobalScope(SoftDeletingScope::class);
     }
 
-    public static function table(Table $table): Table
+    public static function getTableSchema()
     {
-        return $table->columns([
+        return [
             ImageColumn::make('image_url')
                 ->label('')
                 ->size(50),
@@ -261,7 +268,13 @@ class ProductResource extends Resource
                 ->size('sm')
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
-        ])
+        ];
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns(self::getTableSchema())
             ->defaultSort('created_at', 'DESC')
             ->filters([
                 SelectFilter::make('status')

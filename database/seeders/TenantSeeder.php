@@ -41,7 +41,9 @@ class TenantSeeder extends Seeder
 
         Product::factory(6)
             ->withVariants(3)
-            ->hasAttached(Collection::factory())
+            ->hasAttached(
+                Collection::factory()->for($users->random(), 'creator')
+            )
             ->create();
     }
 }
