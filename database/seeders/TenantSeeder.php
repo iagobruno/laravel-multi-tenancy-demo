@@ -6,7 +6,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Database\Seeder;
-use App\Models\{Customer, Post, Product, User};
+use App\Models\{Collection, Customer, Post, Product, User};
 use Illuminate\Support\Facades\DB;
 
 /*
@@ -41,6 +41,7 @@ class TenantSeeder extends Seeder
 
         Product::factory(6)
             ->withVariants(3)
+            ->hasAttached(Collection::factory())
             ->create();
     }
 }

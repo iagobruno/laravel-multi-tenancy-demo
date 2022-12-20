@@ -47,6 +47,11 @@ class Product extends Model
         return $this->hasMany(ProductVariant::class);
     }
 
+    public function collections(): BelongsToMany
+    {
+        return $this->belongsToMany(Collection::class);
+    }
+
     public function imageUrl(): Attribute
     {
         return Attribute::set(function ($value) {
