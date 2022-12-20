@@ -24,6 +24,13 @@ class EditProduct extends EditRecord
                 )
                 ->openUrlInNewTab()
                 ->hidden($this->record->trashed()),
+            Action::make('save')
+                ->label('Salvar alterações')
+                // ->disabled(!$this->record->isDirty())
+                ->action('save')
+                ->color('primary')
+                ->icon('heroicon-o-save')
+                ->hidden($this->record->trashed()),
             RestoreAction::make()
                 ->label('Desarquivar')
                 ->icon('heroicon-o-reply')
