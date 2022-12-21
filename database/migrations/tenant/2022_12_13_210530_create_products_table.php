@@ -18,9 +18,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->longText('description')->nullable();
-            $table->integer('price');
-            $table->integer('compare_at_price')->nullable();
-            $table->integer('cost')->nullable();
+            $table->integer('price')->unsigned();
+            $table->integer('compare_at_price')->unsigned()->nullable();
+            $table->integer('cost')->unsigned()->nullable();
             $table->string('image_url')->nullable();
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();

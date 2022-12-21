@@ -7,6 +7,7 @@ use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Repeater, Section, Select, Textarea, TextInput};
+use App\Filament\Forms\Components\MoneyInput;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -106,44 +107,22 @@ class ProductResource extends Resource
                 ->columnSpan(1),
 
             Section::make('Preço')->schema([
-                // FIX: Aplicar uma máscara de formatação de dinheiro e salvar o valor como integer no banco de dados
-                TextInput::make('price')
+                MoneyInput::make('price')
                     ->label('Preço:')
                     ->required()
-                    ->numeric()
-                    ->step(1)
-                    // ->minValue(0)
-                    // ->mask(
-                    //     fn (TextInput\Mask $mask) => $mask
-                    //         ->numeric()
-                    //         ->decimalPlaces(2)
-                    //         ->decimalSeparator(',')
-                    //         ->thousandsSeparator('.')
-                    //         ->padFractionalZeros()
-                    //         ->normalizeZeros(false)
-                    //         ->signed()
-                    // )
+                    ->default('0,00')
                     ->prefix('R$')
-                    ->placeholder('0,00')
                     ->maxWidth('sm')
-                    // ->formatStateUsing(fn ($state) => ($state) / 100)
-                    // ->dehydrateStateUsing(fn ($state) => dd($state))
                     ->disableAutocomplete(),
-                TextInput::make('compare_at_price')
-                    ->label('Comparação de preços:')
-                    ->numeric()
-                    ->step(1)
+                MoneyInput::make('compare_at_price')
+                    ->label('Comparação de preço:')
                     ->prefix('R$')
-                    ->placeholder('0,00')
                     ->maxWidth('sm')
                     ->helperText('Para mostrar um preço reduzido, mova o valor original do produto para Comparação de preços. Insira um valor menor em Preço.')
                     ->disableAutocomplete(),
-                TextInput::make('cost')
+                MoneyInput::make('cost')
                     ->label('Custo por item:')
-                    ->numeric()
-                    ->step(1)
                     ->prefix('R$')
-                    ->placeholder('0,00')
                     ->maxWidth('sm')
                     ->helperText('Informação não exibida aos clientes')
                     ->disableAutocomplete(),
@@ -165,11 +144,10 @@ class ProductResource extends Resource
                             ->required()
                             ->maxLength(255)
                             ->placeholder('Tamanho, Cor, Material, Estilo ...'),
-                        TextInput::make('price')
+                        MoneyInput::make('price')
                             ->label('Preço')
-                            ->numeric()
-                            ->minValue(0)
-                            ->placeholder('0,00'),
+                            ->prefix('R$')
+                            ->disableAutocomplete(),
                         TextInput::make('stock')
                             ->label('Quantidade')
                             ->required()
