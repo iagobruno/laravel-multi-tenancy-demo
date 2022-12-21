@@ -33,7 +33,7 @@ class CategoryResource extends Resource
         return $form->schema(self::getFormSchema());
     }
 
-    public static function getFormSchema()
+    public static function getFormSchema(): array
     {
         return [
             TextInput::make('name')

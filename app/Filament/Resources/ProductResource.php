@@ -79,6 +79,7 @@ class ProductResource extends Resource
                     ->multiple()
                     ->preload()
                     ->searchable()
+                    ->createOptionForm(CollectionResource::getFormSchema())
                     ->columnSpanFull(),
             ])
                 ->columns([

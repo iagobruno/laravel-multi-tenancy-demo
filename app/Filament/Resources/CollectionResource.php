@@ -36,7 +36,12 @@ class CollectionResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
+        return $form->schema(self::getFormSchema());
+    }
+
+    public static function getFormSchema(): array
+    {
+        return [
             Card::make([
                 TextInput::make('title')
                     ->label('Título:')
@@ -52,7 +57,7 @@ class CollectionResource extends Resource
                     ->label('Descrição:')
                     ->maxLength(255),
             ])
-        ]);
+        ];
     }
 
     public static function table(Table $table): Table
