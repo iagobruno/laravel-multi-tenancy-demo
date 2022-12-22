@@ -110,7 +110,7 @@ class ProductResource extends Resource
                 MoneyInput::make('price')
                     ->label('Preço:')
                     ->required()
-                    ->default('0,00')
+                    ->default(0)
                     ->prefix('R$')
                     ->maxWidth('sm')
                     ->disableAutocomplete(),
@@ -155,7 +155,7 @@ class ProductResource extends Resource
                             ->default(0)
                             ->minValue(0),
                     ])
-                    ->label('')
+                    ->disableLabel()
                     // ->itemLabel('ITEEEM')
                     ->createItemButtonLabel('Criar variante')
                     ->orderable()
@@ -175,7 +175,7 @@ class ProductResource extends Resource
                     ->visible(fn (callable $get) => $get('shippable') === true),
                 Placeholder::make('shipping_explanation')
                     ->content('Os clientes não inserirão o endereço de entrega nem escolherão uma forma de frete ao comprar este produto.')
-                    ->label('')
+                    ->disableLabel()
                     ->visible(fn (callable $get) => $get('shippable') === false)
             ])
                 ->columnSpan(2),
@@ -183,7 +183,7 @@ class ProductResource extends Resource
             // Meta data
             Section::make('Meta dados')->schema([
                 KeyValue::make('metadata')
-                    ->label('')
+                    ->disableLabel()
                     // ->default([])
                     ->keyLabel('Chave')
                     ->keyPlaceholder('Nome da propriedade')

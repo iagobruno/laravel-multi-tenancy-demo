@@ -46,7 +46,7 @@ class PostResource extends Resource
                         return tenant_route(tenant()->subdomain, 'post_page', ['post' => $slug]);
                     }),
                 RichEditor::make('content')
-                    ->label('')
+                    ->disableLabel()
                     ->required()
                     ->disableToolbarButtons(['attachFiles'])
                     ->columnSpanFull(),

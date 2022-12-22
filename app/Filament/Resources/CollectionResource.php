@@ -71,8 +71,8 @@ class CollectionResource extends Resource
                 ->url(
                     fn ($record) => tenant_route(tenant()->subdomain, 'collection_page', [$record->slug])
                 )
-                ->icon('heroicon-o-external-link')
                 ->openUrlInNewTab()
+                ->icon('heroicon-o-external-link')
                 ->limit(50),
             TextColumn::make('products_count')
                 ->label('Produtos na coleção')

@@ -94,7 +94,7 @@ class CustomerResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('id')->label(''),
+                TextColumn::make('id')->disableLabel(),
                 TextColumn::make('name')
                     ->label('Nome')
                     ->limit(50)
