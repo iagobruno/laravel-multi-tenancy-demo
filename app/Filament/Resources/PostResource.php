@@ -48,6 +48,7 @@ class PostResource extends Resource
                 RichEditor::make('content')
                     ->label('')
                     ->required()
+                    ->disableToolbarButtons(['attachFiles'])
                     ->columnSpanFull(),
                 Select::make('categories')
                     ->label('Categorias:')
