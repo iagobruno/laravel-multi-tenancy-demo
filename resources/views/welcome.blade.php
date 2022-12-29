@@ -11,7 +11,7 @@
         @foreach (\App\Models\Tenant::all() as $tenant)
             <li>
                 <a
-                    href="{{ route('tenant_app', ['tenant' => $tenant->subdomain]) }}"
+                    href="{{ route('tenant.home', ['tenant' => $tenant->subdomain]) }}"
                     class="cursor-pointer text-sky-600 hover:underline">{{ $tenant->name }}</a>
             </li>
         @endforeach

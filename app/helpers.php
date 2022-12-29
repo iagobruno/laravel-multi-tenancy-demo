@@ -21,7 +21,7 @@ if (!function_exists('tenant_route')) {
      */
     function tenant_route(string $name, $parameters = [], $absolute = true)
     {
-        return route($name, [
+        return route("tenant.$name", [
             'tenant' => tenant()->subdomain,
             ...$parameters,
         ], $absolute);

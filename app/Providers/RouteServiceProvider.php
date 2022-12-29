@@ -37,7 +37,8 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
 
             Route::middleware('web')
-                ->domain('{tenant}' . config('app.main_domain'))
+                ->domain('{tenant}.' . config('app.main_domain'))
+                ->name('tenant.')
                 ->group(base_path('routes/tenant.php'));
 
             Route::middleware('web')

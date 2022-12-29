@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::view('/', 'tenant')->name('tenant_app');
+Route::view('/', 'tenant')->name('home');
 
 Route::post('/force-login', function () {
     $userId = request()->input('user_id');

@@ -21,5 +21,5 @@ Route::post('/create-site', function (StoreTenant $request) {
     $data = $request->validated();
     $tenant = Tenant::create($data);
 
-    return redirect()->route('tenant_app', ['tenant' => $tenant->subdomain]);
+    return to_route('tenant.home', ['tenant' => $tenant->subdomain]);
 })->name('create_site');
