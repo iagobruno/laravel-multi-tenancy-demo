@@ -52,16 +52,19 @@ class ProductResource extends Resource
                 Textarea::make('description')
                     ->label('Descrição:')
                     ->columnSpanFull(),
-                // FIX: Mostrar corretamente a imagem de produtos que já tenham imagem
-                FileUpload::make('image_url')
+                FileUpload::make('image_path')
                     ->label('Imagem do produto:')
                     ->image()
                     ->maxSize(1024)
+                    ->disk('imagekit')
+                    ->directory('products-images')
+                    ->visibility('public')
+                    ->getUploadedFileNameForStorageUsing(fn ($file) => $file->hashName())
                     ->imageCropAspectRatio('1:1')
                     ->imageResizeTargetHeight('1024')
                     ->imageResizeTargetWidth('1024')
-                    ->imagePreviewHeight('300')
-                    ->directory('products-images')
+                    ->imagePreviewHeight('360')
+                    // ->deleteUploadedFileUsing(fn ($file) => dd($file))
                     ->columnSpanFull(),
                 TextInput::make('sku')
                     ->label('SKU (Unidade de manutenção de estoque):')
@@ -205,9 +208,10 @@ class ProductResource extends Resource
     public static function getTableSchema()
     {
         return [
-            ImageColumn::make('image_url')
+            ImageColumn::make('image_path')
                 ->label('')
-                ->size(50),
+                ->size(50)
+                ->disk('imagekit'),
             TextColumn::make('title')
                 ->label('Título')
                 ->limit(50)

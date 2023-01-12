@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('price')->unsigned();
             $table->integer('compare_at_price')->unsigned()->nullable();
             $table->integer('cost')->unsigned()->nullable();
-            $table->string('image_url')->nullable();
+            $table->string('image_path')->nullable();
             $table->string('sku')->nullable();
             $table->string('barcode')->nullable();
             $table->boolean('has_variants')->default(false);

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Cviebrock\EloquentSluggable\Sluggable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\{BelongsToMany, HasMany};
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -19,7 +20,7 @@ class Product extends Model
         'title',
         'slug',
         'description',
-        'image_url',
+        'image_path',
         'price',
         'compare_at_price',
         'cost',
@@ -54,10 +55,9 @@ class Product extends Model
 
     public function imageUrl(): Attribute
     {
-        return Attribute::set(function ($value) {
-            if (!str_starts_with($value, 'http')) return asset($value);
-            else return $value;
-        });
+        return Attribute::get(
+            fn() => Storage::disk('imagekit')->url($this->image_path)
+        );
     }
 
     public function sluggable(): array
