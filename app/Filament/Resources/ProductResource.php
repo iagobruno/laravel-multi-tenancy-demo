@@ -8,6 +8,7 @@ use App\Models\Product;
 use Filament\Forms;
 use Filament\Forms\Components\{Card, Checkbox, FileUpload, KeyValue, Placeholder, Repeater, Section, Select, Textarea, TextInput};
 use App\Filament\Forms\Components\MoneyInput;
+use Filament\Forms\Components\Group;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -34,168 +35,166 @@ class ProductResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Card::make([
-                TextInput::make('title')
-                    ->label('Título:')
-                    ->required()
-                    ->maxLength(255)
-                    ->disableAutocomplete()
-                    ->placeholder('Camiseta manga curta')
-                    ->lazy()
-                    ->helperText(function ($state, $record) {
-                        // dd($record->toArray());
-                        if ($record?->slug) $slug = $record->slug;
-                        else $slug = $state ? SlugService::createSlug(Product::class, 'slug', $state) : '...';
-                        return tenant_route(tenant()->subdomain, 'product_page', ['product' => $slug]);
-                    })
-                    ->columnSpanFull(),
-                Textarea::make('description')
-                    ->label('Descrição:')
-                    ->columnSpanFull(),
-                FileUpload::make('image_path')
-                    ->label('Imagem do produto:')
-                    ->image()
-                    ->maxSize(1024)
-                    ->disk('imagekit')
-                    ->directory('products-images')
-                    ->visibility('public')
-                    ->getUploadedFileNameForStorageUsing(fn ($file) => $file->hashName())
-                    ->imageCropAspectRatio('1:1')
-                    ->imageResizeTargetHeight('1024')
-                    ->imageResizeTargetWidth('1024')
-                    ->imagePreviewHeight('360')
-                    // ->deleteUploadedFileUsing(fn ($file) => dd($file))
-                    ->columnSpanFull(),
-                TextInput::make('sku')
-                    ->label('SKU (Unidade de manutenção de estoque):')
-                    ->maxLength(50)
-                    ->helperText('Informação não exibida aos clientes')
-                    ->disableAutocomplete()
-                    ->columnSpan(1),
-                TextInput::make('barcode')
-                    ->label('Código de barras (ISBN, UPC, GTIN etc.):')
-                    ->maxLength(255)
-                    ->disableAutocomplete()
-                    ->columnSpan(1),
-                Select::make('collections')
-                    ->label('Coleção:')
-                    ->relationship('collections', 'title')
-                    ->multiple()
-                    ->preload()
-                    ->searchable()
-                    ->createOptionForm(CollectionResource::getFormSchema())
-                    ->columnSpanFull(),
-            ])
-                ->columns([
-                    'sm' => 2,
+            Group::make([
+                Card::make([
+                    TextInput::make('title')
+                        ->label('Título:')
+                        ->required()
+                        ->maxLength(255)
+                        ->disableAutocomplete()
+                        ->placeholder('Camiseta manga curta')
+                        ->lazy()
+                        ->helperText(function ($state, $record) {
+                            // dd($record->toArray());
+                            if ($record?->slug) $slug = $record->slug;
+                            else $slug = $state ? SlugService::createSlug(Product::class, 'slug', $state) : '...';
+                            return tenant_route(tenant()->subdomain, 'product_page', ['product' => $slug]);
+                        })
+                        ->columnSpanFull(),
+                    Textarea::make('description')
+                        ->label('Descrição:')
+                        ->columnSpanFull(),
+                    FileUpload::make('image_path')
+                        ->label('Imagem do produto:')
+                        ->image()
+                        ->maxSize(1024)
+                        ->disk('imagekit')
+                        ->directory('products-images')
+                        ->visibility('public')
+                        ->getUploadedFileNameForStorageUsing(fn ($file) => $file->hashName())
+                        ->imageCropAspectRatio('1:1')
+                        ->imageResizeTargetHeight('1024')
+                        ->imageResizeTargetWidth('1024')
+                        ->imagePreviewHeight('360')
+                        // ->deleteUploadedFileUsing(fn ($file) => dd($file))
+                        ->columnSpanFull(),
+                    TextInput::make('sku')
+                        ->label('SKU (Unidade de manutenção de estoque):')
+                        ->maxLength(50)
+                        ->helperText('Informação não exibida aos clientes')
+                        ->disableAutocomplete()
+                        ->columnSpan(1),
+                    TextInput::make('barcode')
+                        ->label('Código de barras (ISBN, UPC, GTIN etc.):')
+                        ->maxLength(255)
+                        ->disableAutocomplete()
+                        ->columnSpan(1),
+                    Select::make('collections')
+                        ->label('Coleção:')
+                        ->relationship('collections', 'title')
+                        ->multiple()
+                        ->preload()
+                        ->searchable()
+                        ->createOptionForm(CollectionResource::getFormSchema())
+                        ->columnSpanFull(),
+                ]),
+
+                Section::make('Preço')->schema([
+                    MoneyInput::make('price')
+                        ->label('Preço:')
+                        ->required()
+                        ->default(0)
+                        ->prefix('R$')
+                        ->maxWidth('sm')
+                        ->disableAutocomplete(),
+                    MoneyInput::make('compare_at_price')
+                        ->label('Comparação de preço:')
+                        ->prefix('R$')
+                        ->maxWidth('sm')
+                        ->helperText('Para mostrar um preço reduzido, mova o valor original do produto para Comparação de preços. Insira um valor menor em Preço.')
+                        ->disableAutocomplete(),
+                    MoneyInput::make('cost')
+                        ->label('Custo por item:')
+                        ->prefix('R$')
+                        ->maxWidth('sm')
+                        ->helperText('Informação não exibida aos clientes')
+                        ->disableAutocomplete(),
                 ])
-                ->columnSpan(2),
+                    ->columns(2),
 
-            // Info card
-            Card::make([
-                Placeholder::make('status')
-                    ->label('Status:')
-                    ->content(function (?Product $record) {
-                        if (!$record) return '-';
-                        if ($record->trashed()) return 'Arquivado';
-                        return 'Ativo';
-                    }),
-                Placeholder::make('created_at')
-                    ->label('Criado em:')
-                    ->content(fn (?Product $record) => $record?->created_at->format('d/m/Y à\s H:i') ?? '-'),
-                Placeholder::make('updated_at')
-                    ->label('Atualizado em:')
-                    ->content(fn (?Product $record) => $record?->updated_at->format('d/m/Y à\s H:i') ?? '-'),
+                Section::make('Variantes')->schema([
+                    Checkbox::make('has_variants')
+                        ->label('Este produto tem opções, como tamanho ou cor')
+                        ->default(false)
+                        ->reactive(),
+
+                    Repeater::make('variants')
+                        ->relationship('variants')
+                        ->schema([
+                            TextInput::make('name')
+                                ->label('Variante')
+                                ->required()
+                                ->maxLength(255)
+                                ->placeholder('Tamanho, Cor, Material, Estilo ...'),
+                            MoneyInput::make('price')
+                                ->label('Preço')
+                                ->prefix('R$')
+                                ->disableAutocomplete(),
+                            TextInput::make('stock')
+                                ->label('Quantidade')
+                                ->required()
+                                ->numeric()
+                                ->default(0)
+                                ->minValue(0),
+                        ])
+                        ->disableLabel()
+                        // ->itemLabel('ITEEEM')
+                        ->createItemButtonLabel('Criar variante')
+                        ->orderable()
+                        ->columns(3)
+                        ->visible(fn (callable $get) => $get('has_variants') === true),
+                ]),
+
+                Section::make('Envio')->schema([
+                    Checkbox::make('shippable')
+                        ->label('Este produto é físico')
+                        ->default(true)
+                        ->reactive(),
+                    Checkbox::make('returnable')
+                        ->label('Este produto pode ser devolvido')
+                        ->default(false)
+                        ->visible(fn (callable $get) => $get('shippable') === true),
+                    Placeholder::make('shipping_explanation')
+                        ->content('Os clientes não inserirão o endereço de entrega nem escolherão uma forma de frete ao comprar este produto.')
+                        ->disableLabel()
+                        ->visible(fn (callable $get) => $get('shippable') === false)
+                ]),
+
+                // Meta data
+                Section::make('Meta dados')->schema([
+                    KeyValue::make('metadata')
+                        ->disableLabel()
+                        // ->default([])
+                        ->keyLabel('Chave')
+                        ->keyPlaceholder('Nome da propriedade')
+                        ->valueLabel('Valor')
+                        ->valuePlaceholder('Valor da propriedade')
+                        ->addButtonLabel('Novo')
+                        ->reorderable(),
+                ]),
             ])
-                ->columnSpan(1),
+                ->columnSpan(['lg' => 2]),
 
-            Section::make('Preço')->schema([
-                MoneyInput::make('price')
-                    ->label('Preço:')
-                    ->required()
-                    ->default(0)
-                    ->prefix('R$')
-                    ->maxWidth('sm')
-                    ->disableAutocomplete(),
-                MoneyInput::make('compare_at_price')
-                    ->label('Comparação de preço:')
-                    ->prefix('R$')
-                    ->maxWidth('sm')
-                    ->helperText('Para mostrar um preço reduzido, mova o valor original do produto para Comparação de preços. Insira um valor menor em Preço.')
-                    ->disableAutocomplete(),
-                MoneyInput::make('cost')
-                    ->label('Custo por item:')
-                    ->prefix('R$')
-                    ->maxWidth('sm')
-                    ->helperText('Informação não exibida aos clientes')
-                    ->disableAutocomplete(),
+            // Aside card
+            Group::make([
+                // Info card
+                Card::make([
+                    Placeholder::make('status')
+                        ->label('Status:')
+                        ->content(function (?Product $record) {
+                            if (!$record) return '-';
+                            if ($record->trashed()) return 'Arquivado';
+                            return 'Ativo';
+                        }),
+                    Placeholder::make('created_at')
+                        ->label('Criado em:')
+                        ->content(fn (?Product $record) => $record?->created_at->format('d/m/Y à\s H:i') ?? '-'),
+                    Placeholder::make('updated_at')
+                        ->label('Atualizado em:')
+                        ->content(fn (?Product $record) => $record?->updated_at->format('d/m/Y à\s H:i') ?? '-'),
+                ])
             ])
-                ->columns(2)
-                ->columnSpan(2),
-
-            Section::make('Variantes')->schema([
-                Checkbox::make('has_variants')
-                    ->label('Este produto tem opções, como tamanho ou cor')
-                    ->default(false)
-                    ->reactive(),
-
-                Repeater::make('variants')
-                    ->relationship('variants')
-                    ->schema([
-                        TextInput::make('name')
-                            ->label('Variante')
-                            ->required()
-                            ->maxLength(255)
-                            ->placeholder('Tamanho, Cor, Material, Estilo ...'),
-                        MoneyInput::make('price')
-                            ->label('Preço')
-                            ->prefix('R$')
-                            ->disableAutocomplete(),
-                        TextInput::make('stock')
-                            ->label('Quantidade')
-                            ->required()
-                            ->numeric()
-                            ->default(0)
-                            ->minValue(0),
-                    ])
-                    ->disableLabel()
-                    // ->itemLabel('ITEEEM')
-                    ->createItemButtonLabel('Criar variante')
-                    ->orderable()
-                    ->columns(3)
-                    ->visible(fn (callable $get) => $get('has_variants') === true),
-            ])
-                ->columnSpan(2),
-
-            Section::make('Envio')->schema([
-                Checkbox::make('shippable')
-                    ->label('Este produto é físico')
-                    ->default(true)
-                    ->reactive(),
-                Checkbox::make('returnable')
-                    ->label('Este produto pode ser devolvido')
-                    ->default(false)
-                    ->visible(fn (callable $get) => $get('shippable') === true),
-                Placeholder::make('shipping_explanation')
-                    ->content('Os clientes não inserirão o endereço de entrega nem escolherão uma forma de frete ao comprar este produto.')
-                    ->disableLabel()
-                    ->visible(fn (callable $get) => $get('shippable') === false)
-            ])
-                ->columnSpan(2),
-
-            // Meta data
-            Section::make('Meta dados')->schema([
-                KeyValue::make('metadata')
-                    ->disableLabel()
-                    // ->default([])
-                    ->keyLabel('Chave')
-                    ->keyPlaceholder('Nome da propriedade')
-                    ->valueLabel('Valor')
-                    ->valuePlaceholder('Valor da propriedade')
-                    ->addButtonLabel('Novo')
-                    ->reorderable(),
-            ])
-                ->columnSpan(2),
+                ->columnSpan(['lg' => 1]),
         ])
             ->columns(3);
     }
