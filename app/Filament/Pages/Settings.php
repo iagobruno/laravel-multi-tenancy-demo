@@ -21,13 +21,12 @@ class Settings extends Page implements HasForms
     protected static string $view = 'filament.pages.settings';
     protected ?string $maxContentWidth = '4xl';
 
-    public ?string $site_name = null;
-    public ?string $site_description = null;
-    public ?string $store_segment = null;
-    public ?string $main_email = null;
-    public bool $marketing_consent = true;
-    public ?string $primary_color = null;
-    public ?string $subdomain = null;
+    public array $settings = [];
+
+    protected function getFormStatePath(): string
+    {
+        return 'settings';
+    }
 
     public function getFormSchema(): array
     {
