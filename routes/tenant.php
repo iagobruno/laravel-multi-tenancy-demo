@@ -30,6 +30,9 @@ Route::middleware([
         echo 'Configurações do site:';
         dump(tenant()->settings);
 
+        echo 'Usuário logado:';
+        dump(auth()->user()?->toArray());
+
         // dump(\App\Models\User::all()->toArray());
     })->name('home');
 

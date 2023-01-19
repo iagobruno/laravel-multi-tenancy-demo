@@ -89,7 +89,7 @@ class Settings extends Page implements HasForms
                         ->label('Sub domínio da loja:')
                         ->minLength(4)
                         ->maxLength(50)
-                        ->prefix('http://')
+                        ->prefix('https://')
                         ->suffix(env('MAIN_DOMAIN')),
                 ]),
         ];
