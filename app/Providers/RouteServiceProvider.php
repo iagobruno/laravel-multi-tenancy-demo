@@ -38,7 +38,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->group(base_path('routes/api.php'));
 
             Route::middleware(['web', SetCurrentTenantParamForUrls::class])
-                ->domain('{tenant}.' . config('app.main_domain'))
+                ->domain('{tenant}' . config('app.short_url'))
                 ->name('tenant.')
                 ->group(base_path('routes/tenant.php'));
 
