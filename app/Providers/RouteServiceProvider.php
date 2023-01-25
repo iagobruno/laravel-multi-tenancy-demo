@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
+use App\Http\Middleware\SetCurrentTenantParamForUrls;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->prefix('api')
                 ->group(base_path('routes/api.php'));
 
-            Route::middleware('web')
+            Route::middleware(['web', SetCurrentTenantParamForUrls::class])
                 ->domain('{tenant}.' . config('app.main_domain'))
                 ->name('tenant.')
                 ->group(base_path('routes/tenant.php'));

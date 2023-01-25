@@ -5,12 +5,9 @@
  */
 
 if (!function_exists('tenant')) {
-    function tenant(string|null $attribute = null)
+    function tenant()
     {
-        if (is_null($attribute)) {
-            return request()->route('tenant');
-        }
-        return request()->route('tenant')->getAttribute($attribute);
+        return request()->route('tenant');
     }
 }
 

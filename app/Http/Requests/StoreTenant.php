@@ -15,7 +15,7 @@ class StoreTenant extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'min:4', 'max:255'],
-            'subdomain' => ['required', 'string', 'min:4', 'max:255', 'alpha_num', 'unique:tenants,subdomain'],
+            'subdomain' => ['required', 'string', 'min:2', 'max:255', 'alpha_num', 'unique:tenants,subdomain'],
         ];
     }
 
