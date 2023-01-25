@@ -46,7 +46,7 @@ class Store extends BaseTenant implements TenantWithDatabase
     public function subdomain(): Attribute
     {
         return Attribute::get(
-            fn () => $this->domains()->firstWhere('domain', 'LIKE', ('%' . env('MAIN_DOMAIN')))->domain
+            fn () => $this->domains()->firstWhere('domain', 'LIKE', ('%' . config('app.short_url')))->domain
         );
     }
 

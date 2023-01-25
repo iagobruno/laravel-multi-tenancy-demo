@@ -50,7 +50,7 @@ class CreateStore extends Component implements HasForms
                                 function () {
                                     return function (string $attribute, $value, Closure $fail) {
                                         $domainAlreadyTaken = DB::table('domains')
-                                            ->where('domain', $value . '.' . env('MAIN_DOMAIN'))
+                                            ->where('domain', $value . config('app.short_url'))
                                             ->exists();
                                         if ($domainAlreadyTaken) {
                                             $fail("Este domínio já está em uso.");
@@ -59,7 +59,7 @@ class CreateStore extends Component implements HasForms
                                 },
                             ])
                             ->prefix('https://')
-                            ->suffix(env('MAIN_DOMAIN')),
+                            ->suffix(config('app.short_url')),
                     ]),
                 Step::make('Detalhes')
                     ->icon('heroicon-o-identification')
@@ -104,17 +104,16 @@ class CreateStore extends Component implements HasForms
             ->toArray();
         $subdomain = $formState->get('subdomain');
 
-        DB::transaction(function () use ($data, $subdomain) {
-            $tenant = Store::create([
-                'owner_id' => auth()->id(),
-                'settings' => $data,
-            ]);
-            $tenant->createDomain($subdomain . '.' . env('MAIN_DOMAIN'));
-        });
+        $tenant = Store::create([
+            'owner_id' => auth()->id(),
+            'settings' => $data,
+        ]);
+        $tenant->createDomain($subdomain . config('app.short_url'));
 
         return redirect();
         // Mostrar mensagem "criando loja..."
         // Loja criada com sucesso
+        // Redirecionar para o painel de controle
     }
 
     protected function getFormStatePath(): string

@@ -90,7 +90,7 @@ class Settings extends Page implements HasForms
                         ->minLength(4)
                         ->maxLength(50)
                         ->prefix('https://')
-                        ->suffix(env('MAIN_DOMAIN')),
+                        ->suffix(config('app.short_url')),
                 ]),
         ];
     }
